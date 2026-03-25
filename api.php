@@ -5,18 +5,18 @@ use \PhpMqtt\Client\MqttClient;
 use \PhpMqtt\Client\ConnectionSettings;
 
 // --- 1. Configuration TTN ---
-$server   = 'eu1.cloud.thethings.network';
-$port     = 1883;
-$clientId = 'dell-r510-client';
-$username = 'iqe-iqa@ttn';
-$password = 'NNSXS.2NQ7D4QRNLCKMOU62KIZX5NVU2475ZIBN3UPFLA.CSICYZKMD2TK5BM3R4BZCYSES3EHXNYFBBFR2BMRRW6LGHTZQ2LA';
-$topic    = 'v3/+/devices/+/up';
+$server   = 'server';
+$port     = "port";
+$clientId = 'client_id';
+$username = 'username';
+$password = 'password';
+$topic    = 'topic';
 
 // --- 2. Configuration MariaDB/MySQL ---
 $db_host = 'localhost';
-$db_name = 'smart_territories';
-$db_user = 'user_iot';
-$db_pass = 'Ciel_2026!';
+$db_name = 'dbnale';
+$db_user = 'user';
+$db_pass = 'password!';
 
 try {
     $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
