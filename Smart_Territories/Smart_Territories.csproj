@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Fonts\Dosis.ttf" />
+    <None Remove="Images\wind-best - Copier.png" />
+    <None Remove="Images\wind-best.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="ProEssentials.Chart.Net80.Wpf" Version="10.0.0.22" />
+    <PackageReference Include="Syncfusion.SfChart.WPF" Version="33.1.45" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\Dosis.ttf" />
+    <Resource Include="Images\wind-best - Copier.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
