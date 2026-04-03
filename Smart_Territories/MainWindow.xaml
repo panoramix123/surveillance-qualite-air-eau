@@ -10,196 +10,131 @@
         ResizeMode="NoResize"
         Background="Gray">
 
+    <Window.Resources>
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="#01FFFFFF"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="Red"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WindowControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Background" Value="#01FFFFFF"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="MenuLinkStyle" TargetType="Button">
+            <Setter Property="Background" Value="#01FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontFamily" Value="Fonts/#Dosis"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10,0"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="MenuBorder" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MenuBorder" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform Y="1"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
         <Grid Background="DarkGray"
-              Grid.ColumnSpan="2">
+              Panel.ZIndex="999" 
+              MouseDown="Grid_MouseDown">
+
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="SafeBreath"
-                     Foreground="Black"
-                     Grid.Column="0"
-                     VerticalAlignment="Center"
-                     HorizontalAlignment="Center"
-                     FontFamily="Fonts/#Dosis"
-                     FontWeight="Medium"/>
-            
-            <TextBlock Text="Cartes"
-                    Foreground="Black"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    FontFamily="Fonts/#Dosis"
-                    FontWeight="Medium"/>
-            
-            <TextBlock Text="Mesures"
-                    Foreground="Black"
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    FontFamily="Fonts/#Dosis"
-                    FontWeight="Medium"/>
-            
-            <TextBlock Text="Graphiques"
-                    Foreground="Black"
-                    Grid.Column="3"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    FontFamily="Fonts/#Dosis"
-                    FontWeight="Medium"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Button Content="SafeBreath" Style="{StaticResource MenuLinkStyle}" Click="BtnNavAccueil_Click"/>
+                <Button Content="Cartes" Style="{StaticResource MenuLinkStyle}" Click="BtnNavCartes_Click"/>
+                <Button Content="Mesures" Style="{StaticResource MenuLinkStyle}" Click="BtnNavMesures_Click"/>
+                <Button Content="Graphiques" Style="{StaticResource MenuLinkStyle}" Click="BtnNavGraphiques_Click"/>
+                <Button Content="Alerter" Style="{StaticResource MenuLinkStyle}" Click="BtnNavAlerter_Click"/>
+                <Button Content="Paramètres" Style="{StaticResource MenuLinkStyle}" Click="BtnNavParametres_Click"/>
+            </StackPanel>
 
-            <TextBlock Text="Alerter"
-                    Foreground="Black"
-                    Grid.Column="4"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    FontFamily="Fonts/#Dosis"
-                    FontWeight="Medium"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button x:Name ="BtnLoginMenu" Content="Se connecter" Style="{StaticResource MenuLinkStyle}" Click="BtnNavSeConnecter_Click" Margin="0,0,15,0"/>
 
-            <TextBlock Text="Paramètres"
-                    Foreground="Black"
-                    Grid.Column="5"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    FontFamily="Fonts/#Dosis"
-                    FontWeight="Medium"/>
-
-            <TextBlock Text="Se connecter"
-                    Foreground="Black"
-                    Grid.Column="11"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Right"
-                    FontFamily="Fonts/#Dosis"
-                    FontWeight="Medium"/>
+                <Button Content="-" Click="BtnMinimize_Click" Style="{StaticResource WindowControlButtonStyle}" />
+                <Button Content="☐" Click="BtnMaximize_Click" Style="{StaticResource WindowControlButtonStyle}" />
+                <Button Content="X" Click="BtnClose_Click" Style="{StaticResource CloseButtonStyle}" />
+            </StackPanel>
         </Grid>
 
-        <StackPanel Grid.Row="1">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Image Width="50" Height="50"
-           Source="Images/wind-best - Copier.png"/>
-                    <TextBlock Text="SafeBreath"
-               Foreground="Black"
-               FontSize="20"
-               FontWeight="Medium"
-               VerticalAlignment="Center"
-               FontFamily="Fonts/#Dosis"/>
-                </StackPanel>
+        <Frame x:Name="MainFrame" Grid.Row="1" NavigationUIVisibility="Hidden"/>
 
-                <TextBlock Text="Bienvenue"
-           Foreground="Black"
-           FontSize="25"
-           FontWeight="Medium"
-           FontFamily="Fonts/#Dosis"/>
-
-                <TextBlock Text="Sur SafeBreath"
-           Foreground="Black"
-           FontSize="25"
-           FontWeight="Medium"
-           FontFamily="Fonts/#Dosis"/>
-
-                <TextBlock Text="IQA / IQE"
-           Foreground="Black"
-           FontSize="25"
-           FontWeight="Medium"
-           FontFamily="Fonts/#Dosis"/>
-
-                <TextBlock Text="Vous trouverez sur cette applicationtou ce qui concerne la pollution de l'air et de l'eau : le nom de tous les polluants, des infos sur le pollen, des graphiques, les différents lieux."
-           Foreground="Black"
-           FontSize="12"
-           FontWeight="Medium"
-           FontFamily="Fonts/#Dosis"
-           TextWrapping="Wrap"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Start"
-                        Foreground="Black"
-                        FontSize="14"
-                        FontWeight="Medium">
-
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                            <Setter Property="Background" Value="DarkGray"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="25"
-                                    CornerRadius="12"
-                                    Background="{TemplateBinding Background}">
-                                <ContentPresenter VerticalAlignment="Center"
-                                                  HorizontalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-
-                <Button Content="Start"
-        Foreground="Black"
-        FontSize="14"
-        FontWeight="Medium">
-
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="TextElement.FontFamily" Value="Fonts/#Dosis"/>
-                            <Setter Property="Background" Value="DarkGray"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="LightGray"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Width="100" Height="25"
-                    CornerRadius="12"
-                    Background="{TemplateBinding Background}">
-                                <ContentPresenter VerticalAlignment="Center"
-                                  HorizontalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
-            </StackPanel>
-
-
-        </StackPanel>
     </Grid>
 </Window>

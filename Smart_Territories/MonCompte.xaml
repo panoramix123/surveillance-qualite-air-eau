@@ -1,0 +1,30 @@
+﻿<Page x:Class="Smart_Territories.MonCompte"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="MonCompte">
+
+    <Grid Background="Gray">
+        <Border Width="350" VerticalAlignment="Center" HorizontalAlignment="Center" Background="DarkGray" CornerRadius="8" Padding="30">
+            <StackPanel>
+                <TextBlock Text="Mon Compte" FontSize="24" FontWeight="Medium" FontFamily="Fonts/#Dosis" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+                <TextBlock Text="Identifiant :" FontWeight="Bold" FontFamily="Fonts/#Dosis"/>
+                <TextBlock x:Name="LblUsername" Text="Nom d'utilisateur" Margin="0,0,0,15" FontFamily="Fonts/#Dosis"/>
+
+                <TextBlock Text="Adresse Email :" FontWeight="Bold" FontFamily="Fonts/#Dosis"/>
+                <TextBlock x:Name="LblEmail" Text="email@exemple.com" Margin="0,0,0,15" FontFamily="Fonts/#Dosis"/>
+
+                <TextBlock Text="Mot de passe :" FontWeight="Bold" FontFamily="Fonts/#Dosis"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <TextBlock x:Name="LblPassword" Text="••••••••" VerticalAlignment="Center" FontFamily="Fonts/#Dosis"/>
+                    <Button Content="Modifier" Click="BtnModifier_Click" Margin="15,0,0,0" Padding="5,2" FontSize="10" Background="#444444" Foreground="White" BorderThickness="0"/>
+                </StackPanel>
+
+                <Separator Margin="0,0,0,20" Background="#555555"/>
+
+                <Button Content="Se déconnecter" Click="BtnLogout_Click" Height="30" Margin="0,0,0,10" Background="#444444" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+                <Button Content="Supprimer mon compte" Click="BtnDelete_Click" Height="30" Background="DarkRed" Foreground="White" BorderThickness="0" Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
