@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étude Indice de Qualité de l’Air - Carte</title>
+  <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body class="page-map">
+
+  <header class="topbar">
+    <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <h1>Étude Indice de Qualité de l’Air</h1>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-title">Menu</div>
+
+      <nav class="menu">
+        <a href="dashboard.html" class="menu-item">Tableau de bord</a>
+
+        <div class="menu-item has-submenu">
+          <button type="button" class="menu-btn">
+            Carte
+            <span class="arrow">▶</span>
+          </button>
+
+          <div class="submenu">
+            <div class="submenu-item has-submenu">
+              <button type="button" class="menu-btn sub-btn">
+                ST Gemmes-sur-Loire
+                <span class="arrow">▶</span>
+              </button>
+
+              <div class="submenu submenu-right">
+                <button type="button" class="submenu-link active">
+                  Rue du Moulin du Pain
+                </button>
+              </div>
+            </div>
+
+            <div class="submenu-item">
+              <button type="button" class="submenu-link">Les Ponts-de-Cé</button>
+            </div>
+
+            <div class="submenu-item">
+              <button type="button" class="submenu-link">Loire-Authion</button>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="menu-item">Graphiques</a>
+        <a href="#" class="menu-item">Informations complémentaires</a>
+        <a href="#" class="menu-item">Paramètres</a>
+        <a href="#" class="menu-item">À venir</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <section class="content-card map-card">
+      <h2>Polluants atmosphériques instantanés</h2>
+
+      <div class="map-layout">
+        <div class="pollutants-panel">
+          <h3>Taux de polluants instantanés :</h3>
+
+          <ul>
+            <li>PM2,5 = 20 µg/m<sup>3</sup></li>
+            <li>PM10 = 5,2 µg/m<sup>3</sup></li>
+            <li>NO2 = 17 µg/m<sup>3</sup></li>
+            <li>O3 = 25 µg/m<sup>3</sup></li>
+            <li>SO2 = 26 µg/m<sup>3</sup></li>
+            <li class="co2-line">CO2 = 13 mg/m<sup>3</sup></li>
+          </ul>
+        </div>
+
+        <div class="map-panel">
+          <div class="location-badge">
+            <strong>ST Gemmes-sur-Loire</strong>
+            <span>47.423785, -0.558774</span>
+          </div>
+
+          <div class="map-visual">
+            <div class="map-line"></div>
+            <div class="map-focus"></div>
+
+            <img
+              src="Assets/Maps/Carte_St_Gemmes.png"
+              alt="Carte de Saint-Gemmes-sur-Loire"
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="JS/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étude Indice de Qualité de l’Air - Tableau de bord</title>
+  <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body class="page-dashboard">
+
+  <header class="topbar">
+    <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <h1>Étude Indice de Qualité de l’Air</h1>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-title">Menu</div>
+
+      <nav class="menu">
+        <a href="dashboard.html" class="menu-item active-link">Tableau de bord</a>
+
+        <div class="menu-item has-submenu">
+          <button type="button" class="menu-btn">
+            Carte
+            <span class="arrow">▶</span>
+          </button>
+
+          <div class="submenu">
+            <div class="submenu-item has-submenu">
+              <button type="button" class="menu-btn sub-btn">
+                ST Gemmes-sur-Loire
+                <span class="arrow">▶</span>
+              </button>
+
+              <div class="submenu submenu-right">
+                <a href="index.html" class="submenu-link">Rue du Moulin du Pain</a>
+              </div>
+            </div>
+
+            <div class="submenu-item">
+              <button type="button" class="submenu-link">Les Ponts-de-Cé</button>
+            </div>
+
+            <div class="submenu-item">
+              <button type="button" class="submenu-link">Loire-Authion</button>
+            </div>
+          </div>
+        </div>
+
+        <a href="#" class="menu-item">Graphiques</a>
+        <a href="#" class="menu-item">Informations complémentaires</a>
+        <a href="#" class="menu-item">Paramètres</a>
+        <a href="#" class="menu-item">À venir</a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <section class="content-card dashboard-card">
+      <h2>Tableau de bord</h2>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-main">
+          <div class="air-icon" aria-hidden="true">
+            <div class="eye left-eye"></div>
+            <div class="eye right-eye"></div>
+            <div class="mouth"></div>
+          </div>
+
+          <div class="quality-summary">
+            <p>Indice Qualité Air</p>
+            <strong>Bon</strong>
+          </div>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Polluant principal</p>
+          <strong>PM10</strong>
+          <span>5,2 µg/m<sup>3</sup></span>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Température</p>
+          <strong>16°C</strong>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Humidité</p>
+          <strong>24%</strong>
+        </div>
+
+        <div class="dashboard-box empty-box">
+            <p>Module complémentaire</p>
+            <strong>--</strong>
+        </div>
+    </section>
+  </main>
+
+  <script src="JS/script.js"></script>
+</body>
+</html>
