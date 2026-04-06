@@ -10,8 +10,12 @@
 
   <ItemGroup>
     <None Remove="Fonts\Dosis.ttf" />
+    <None Remove="Images\image_ecfd22 - Copier.png" />
+    <None Remove="Images\image_ecfd22.png" />
+    <None Remove="Images\Info-bulle.png" />
     <None Remove="Images\wind-best - Copier.png" />
     <None Remove="Images\wind-best.png" />
+    <None Remove="Images\wind.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,9 +26,14 @@
 
   <ItemGroup>
     <Resource Include="Fonts\Dosis.ttf" />
+    <Resource Include="Images\image_ecfd22 - Copier.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Info-bulle.png" />
     <Resource Include="Images\wind-best - Copier.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\wind.png" />
   </ItemGroup>
 
 </Project>

@@ -42,13 +42,37 @@
                              BorderThickness="0"/>
 
                 <TextBlock x:Name="ErrorText" 
-                            Foreground="DarkRed" 
-                            FontSize="12" 
-                            FontFamily="Fonts/#Dosis" 
-                            HorizontalAlignment="Center" 
-                            Margin="0,0,0,10" 
-                            Visibility="Collapsed" 
-                            TextWrapping="Wrap"/>
+                           Foreground="DarkRed" 
+                           FontSize="12" 
+                           FontFamily="Fonts/#Dosis" 
+                           HorizontalAlignment="Center" 
+                           Margin="0,0,0,10" 
+                           Visibility="Collapsed" 
+                           TextWrapping="Wrap"/>
+
+                <Button x:Name="BtnLogin" 
+                        Content="Se connecter" 
+                        IsDefault="True" 
+                        Height="35" 
+                        Click="BtnLogin_Click" 
+                        Background="#333333" 
+                        Foreground="White" 
+                        FontFamily="Fonts/#Dosis" 
+                        FontWeight="Medium" 
+                        Cursor="Hand" 
+                        Margin="0,0,0,10"/>
+
+                <Button x:Name="BtnRegister" 
+                        Content="Créer un compte" 
+                        Height="35" 
+                        Click="BtnRegister_Click" 
+                        Background="DarkGray" 
+                        Foreground="Black" 
+                        FontFamily="Fonts/#Dosis" 
+                        FontWeight="Medium" 
+                        Cursor="Hand" 
+                        BorderThickness="1" 
+                        BorderBrush="#333333"/>
 
                 <Button Content="Valider" 
                         IsDefault="True"
