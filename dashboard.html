@@ -75,30 +75,41 @@
 
           <div class="quality-summary">
             <p>Indice Qualité Air</p>
-            <strong>Bon</strong>
+            <strong id="qualite-air"></strong>
           </div>
+        </div>
+
+        <div class="dashboard-box empty-box">
+          <p>Scénarios de test</p>
+
+          <label style="display:block; margin-top:10px;">
+            <input type="checkbox" id="toggle-json">
+            Pollution élevée
+          </label>
+
+          <label style="display:block; margin-top:10px;">
+            <input type="checkbox" id="toggle-error">
+            Simuler erreur API
+          </label>
         </div>
 
         <div class="dashboard-box">
           <p>Polluant principal</p>
-          <strong>PM10</strong>
-          <span>5,2 µg/m<sup>3</sup></span>
+          <strong id="polluant-principal"></strong>
+          <span><span id="valeur-polluant"></span> µg/m<sup>3</sup></span>
         </div>
 
         <div class="dashboard-box">
           <p>Température</p>
-          <strong>16°C</strong>
+          <strong><span id="temperature"></span> °C</strong>
         </div>
 
         <div class="dashboard-box">
           <p>Humidité</p>
-          <strong>24%</strong>
+          <strong><span id="humidite"></span> %</strong>
         </div>
 
-        <div class="dashboard-box empty-box">
-            <p>Module complémentaire</p>
-            <strong>--</strong>
-        </div>
+      </div>
     </section>
   </main>
 
