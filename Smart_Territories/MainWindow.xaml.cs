@@ -13,7 +13,7 @@ namespace Smart_Territories
         {
             InitializeComponent();
 
-            // Ajoute cette ligne pour charger ton contenu de bienvenue au démarrage
+            // Ajouter cette ligne pour charger le contenu de bienvenue au démarrage
             MainFrame.Navigate(new Uri("Accueil.xaml", UriKind.Relative));
         }
 

@@ -73,29 +73,6 @@
                         Cursor="Hand" 
                         BorderThickness="1" 
                         BorderBrush="#333333"/>
-
-                <Button Content="Valider" 
-                        IsDefault="True"
-                        Height="35" 
-                        Click="BtnLogin_Click" 
-                        Background="#333333" 
-                        Foreground="White" 
-                        FontFamily="Fonts/#Dosis" 
-                        FontWeight="Medium" 
-                        Cursor="Hand">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="BtnBorder" Background="{TemplateBinding Background}" CornerRadius="4">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="BtnBorder" Property="Background" Value="Black"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
             </StackPanel>
         </Border>
     </Grid>

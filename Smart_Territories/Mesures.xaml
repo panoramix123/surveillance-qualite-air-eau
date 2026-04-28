@@ -115,7 +115,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Ozone (O3)" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="Ozone (O₃)" Style="{StaticResource CardTitleStyle}"/>
                                 <Button Style="{StaticResource InfoButtonStyle}" Grid.Column="1" Click="InfoButton_Click" Tag="O3"/>
                             </Grid>
                             <TextBlock Text="Gaz irritant formé par des réactions photochimiques. Hautement toxique pour le système respiratoire." Style="{StaticResource CardTextStyle}" Grid.Row="1"/>
@@ -133,7 +133,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Dioxyde d'azote (NO2)" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="Dioxyde d'azote (NO₂)" Style="{StaticResource CardTitleStyle}"/>
                                 <Button Style="{StaticResource InfoButtonStyle}" Grid.Column="1" Click="InfoButton_Click" Tag="NO2"/>
                             </Grid>
                             <TextBlock Text="Gaz émis par les processus de combustion (trafic routier). Il altère la fonction pulmonaire." Style="{StaticResource CardTextStyle}" Grid.Row="1"/>
@@ -151,7 +151,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Dioxyde de soufre (SO2)" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="Dioxyde de soufre (SO₂)" Style="{StaticResource CardTitleStyle}"/>
                                 <Button Style="{StaticResource InfoButtonStyle}" Grid.Column="1" Click="InfoButton_Click" Tag="SO2"/>
                             </Grid>
                             <TextBlock Text="Gaz issu de la combustion d'énergies fossiles. Il cause des problèmes respiratoires et pluies acides." Style="{StaticResource CardTextStyle}" Grid.Row="1"/>
@@ -169,7 +169,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Dioxyde de carbone (CO2)" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="Dioxyde de carbone (CO₂)" Style="{StaticResource CardTitleStyle}"/>
                                 <Button Style="{StaticResource InfoButtonStyle}" Grid.Column="1" Click="InfoButton_Click" Tag="CO2"/>
                             </Grid>
                             <TextBlock Text="Indicateur clé du niveau de confinement en espace clos. Des niveaux élevés nuisent à la concentration." Style="{StaticResource CardTextStyle}" Grid.Row="1"/>
@@ -245,7 +245,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Dioxygène gazeux (O2)" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="Dioxygène gazeux (O₂)" Style="{StaticResource CardTitleStyle}"/>
                                 <Button Style="{StaticResource InfoButtonStyle}" Grid.Column="1" Click="InfoButton_Click" Tag="O2"/>
                             </Grid>
                             <TextBlock Text="Oxygène dissous dans l'eau, vital pour la faune aquatique. Une baisse indique souvent une pollution." Style="{StaticResource CardTextStyle}" Grid.Row="1"/>

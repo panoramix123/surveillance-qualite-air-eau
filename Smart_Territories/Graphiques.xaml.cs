@@ -1,153 +1,109 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using Smart_Territories.Models;
+using Smart_Territories.Services;
 
 namespace Smart_Territories
 {
     public partial class Graphiques : Page
     {
-        // =====================================================================================
-        // EXPLICATION DE L'HTTPCLIENT :
-        // On déclare HttpClient en 'static' (unique pour toute l'application). 
-        // C'est une règle stricte en C# : si tu crées un nouveau HttpClient à chaque fois 
-        // que tu ouvres la page, tu vas saturer les ports réseau de ton PC (Socket Exhaustion).
-        // =====================================================================================
         private static readonly HttpClient client = new HttpClient();
-
-        // =====================================================================================
-        // URL DE TON API :
-        // Remplace "TON_ID" par la vraie valeur de ton projet MockAPI.
-        // Assure-toi que l'URL se termine bien par /mesures (le nom de la ressource créée).
-        // =====================================================================================
         private readonly string apiUrl = "https://69d420fdd396bd74235ccb69.mockapi.io/users/mesures";
+
+        // Liste complète stockée en mémoire pour éviter de rappeler l'API à chaque clic
+        private List<PollutantChart> allCharts = new List<PollutantChart>();
+        private List<PollutantSelectorItem> selectorItems = new List<PollutantSelectorItem>();
 
         public Graphiques()
         {
             InitializeComponent();
-
-            // =====================================================================================
-            // EXPLICATION DU CHARGEMENT ASYNCHRONE :
-            // Le constructeur d'une page (Graphiques()) ne peut pas être 'async'. 
-            // Or, un appel réseau à une API prend du temps et DOIT être asynchrone pour ne pas 
-            // figer (freezer) toute l'interface de l'application pendant que la donnée arrive.
-            // On accroche donc notre méthode de chargement à l'événement "Loaded" de la page.
-            // =====================================================================================
-            this.Loaded += Graphiques_Loaded;
+            this.Loaded += async (s, e) => await LoadDataAsync();
         }
 
-        // Événement déclenché automatiquement quand la page s'affiche à l'écran
-        private async void Graphiques_Loaded(object sender, RoutedEventArgs e)
-        {
-            // On lance la récupération des données
-            await FetchDataFromApiAsync();
-        }
-
-        private async Task FetchDataFromApiAsync()
+        private async Task LoadDataAsync()
         {
             try
             {
-                // =====================================================================================
-                // 1. REQUÊTE RÉSEAU :
-                // On envoie une requête HTTP de type GET à l'API MockAPI.
-                // 'await' signifie : le code s'arrête ici et attend que le serveur réponde.
-                // =====================================================================================
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                string json = await client.GetStringAsync(apiUrl);
+                allCharts = JsonSerializer.Deserialize<List<PollutantChart>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                // On vérifie si le serveur a répondu avec un code 200 (OK).
-                if (response.IsSuccessStatusCode)
-                {
-                    // =====================================================================================
-                    // 2. LECTURE DU JSON :
-                    // On extrait le contenu textuel brut de la réponse (le bloc JSON écrit à l'étape 1).
-                    // =====================================================================================
-                    string jsonResponse = await response.Content.ReadAsStringAsync();
+                // Initialiser le menu de sélection à gauche
+                selectorItems = allCharts.Select(c => new PollutantSelectorItem { Name = c.Title, IsSelected = true }).ToList();
+                PollutantSelector.ItemsSource = selectorItems;
 
-                    // =====================================================================================
-                    // 3. DÉSÉRIALISATION (Transformation) :
-                    // JsonSerializer prend le texte JSON incompréhensible pour le système, 
-                    // et le convertit intelligemment en une liste d'objets C# (List<PollutantChart>).
-                    // Il associe automatiquement "Title" du JSON à la propriété "Title" de la classe.
-                    // Optionnel : PropertyNameCaseInsensitive évite les crashs si le JSON a des minuscules.
-                    // =====================================================================================
-                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-                    var chartsData = JsonSerializer.Deserialize<List<PollutantChart>>(jsonResponse, options);
-
-                    if (chartsData != null)
-                    {
-                        // =====================================================================================
-                        // 4. PRÉPARATION DU RENDU VISUEL :
-                        // L'API ne sait pas quelle est la taille de notre écran. Elle envoie juste la valeur.
-                        // On doit calculer la hauteur du rectangle à dessiner pour chaque barre du graphique.
-                        // =====================================================================================
-                        double maxPixelHeight = 110.0; // Hauteur max disponible dans le cadre gris du XAML
-
-                        foreach (var chart in chartsData)
-                        {
-                            foreach (var point in chart.Points)
-                            {
-                                // =====================================================================================
-                                // CALCUL EN CROIX :
-                                // Hauteur_Barre = (Valeur_Polluant / Valeur_Maximum_Échelle) * Hauteur_Max_Ecran
-                                // Cela empêche une valeur de 120 (pour l'Ozone) de sortir physiquement de l'écran.
-                                // =====================================================================================
-                                point.DisplayHeight = (point.Value / chart.MaxValue) * maxPixelHeight;
-                            }
-                        }
-
-                        // =====================================================================================
-                        // 5. AFFICHAGE (DATA BINDING) :
-                        // On injecte notre liste finale dans le composant visuel 'ChartsContainer' du XAML.
-                        // Le XAML va automatiquement boucler dessus et générer les rectangles.
-                        // =====================================================================================
-                        ChartsContainer.ItemsSource = chartsData;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Erreur de l'API : Le serveur a refusé la connexion.", "Erreur HTTP");
-                }
+                UpdateDisplay();
             }
-            catch (Exception ex)
+            catch { MessageBox.Show("Erreur API"); }
+        }
+
+        // Met à jour les graphiques affichés selon les CheckBox et la Fréquence
+        // Met à jour les graphiques affichés selon les CheckBox et la Fréquence
+        private void UpdateDisplay()
+        {
+            if (allCharts == null || ChartsContainer == null || TxtTitle == null) return;
+
+            var selectedNames = selectorItems.Where(i => i.IsSelected).Select(i => i.Name).ToList();
+            var filtered = allCharts.Where(c => selectedNames.Contains(c.Title)).ToList();
+
+            // LECTURE DU CURSEUR (au lieu de la ComboBox)
+            int intervalHours = (int)(SliderFrequency?.Value ?? 24);
+
+            // On instancie notre nouveau service de calcul
+            var simulator = new DataSimulator();
+
+            foreach (var chart in filtered)
             {
-                // =====================================================================================
-                // GESTION DES ERREURS FATALES :
-                // Ce bloc "catch" s'active si tu n'as pas internet, ou si l'URL MockAPI est fausse.
-                // Sans ça, l'application crasherait brutalement (Fermeture Windows).
-                // =====================================================================================
-                MessageBox.Show($"Impossible de joindre l'API.\nDétail : {ex.Message}", "Erreur Réseau");
+                // On délègue le travail mathématique au service
+                chart.DisplayPoints = simulator.GenerateSimulatedPoints(chart, intervalHours);
+                CalculateCoordinates(chart);
+            }
+
+            ChartsContainer.ItemsSource = null;
+            ChartsContainer.ItemsSource = filtered;
+            TxtTitle.Text = selectedNames.Count == 0 ? "Aucun polluant sélectionné" : "Analyses détaillées";
+        }
+
+        private void CalculateCoordinates(PollutantChart chart)
+        {
+            double h = 110.0; double w = 300.0;
+            chart.LinePoints = new PointCollection();
+            double xStep = w / (chart.DisplayPoints.Count - 1);
+
+            bool showMarkers = chart.DisplayPoints.Count <= 7;
+
+            for (int i = 0; i < chart.DisplayPoints.Count; i++)
+            {
+                var p = chart.DisplayPoints[i];
+                double x = i * xStep;
+                double y = h - ((p.Value / chart.MaxValue) * h);
+                chart.LinePoints.Add(new Point(x, y));
+
+                p.PointX = x - 3;
+                p.PointY = y - 3;
+                p.TextX = x - 8;
+                p.TextY = y - 18;
+
+                // NOUVEAU : Position X pour le texte de l'axe des temps (décalage pour centrer le texte)
+                p.AxisX = x - 8;
+
+                p.LabelText = Math.Round(p.Value, 1).ToString();
+                p.MarkerVisibility = showMarkers ? Visibility.Visible : Visibility.Collapsed;
             }
         }
-    }
 
-    // =====================================================================================
-    // CLASSES DE DONNÉES (LES MODÈLES) :
-    // Ces classes sont les "moules" qui permettent au C# de comprendre la forme du JSON.
-    // Leurs noms de propriétés (Title, MaxValue, Points) DOIVENT être exactement 
-    // les mêmes que les clés écrites dans le texte JSON sur MockAPI.
-    // =====================================================================================
-
-    public class PollutantChart
-    {
-        public string Title { get; set; }     // Nom affiché en haut de la carte
-        public double MaxValue { get; set; }  // Limite haute pour calculer la proportion du graphique
-        public List<ChartPoint> Points { get; set; } // Liste des 7 jours pour ce polluant
-    }
-
-    public class ChartPoint
-    {
-        public string Label { get; set; }     // Nom du jour (ex: "Lun")
-        public double Value { get; set; }     // Valeur brute renvoyée par l'API
-
-        // =====================================================================================
-        // PROPRIÉTÉ CALCULÉE LOCALEMENT :
-        // DisplayHeight n'existe pas dans le JSON de l'API. C'est normal.
-        // C'est une donnée purement visuelle (Frontend) calculée par l'étape 4 ci-dessus 
-        // juste avant l'affichage. Le { get; set; } permet au XAML de la lire.
-        // =====================================================================================
-        public double DisplayHeight { get; set; }
-    }
+        private void CheckBox_FilterChanged(object sender, RoutedEventArgs e) => UpdateDisplay();
+        private void SliderFrequency_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // Met à jour le petit texte à côté du curseur (ex: "6h")
+            if (TxtSliderValue != null) TxtSliderValue.Text = $"{e.NewValue}h";
+            UpdateDisplay();
+        }
+    }  
 }

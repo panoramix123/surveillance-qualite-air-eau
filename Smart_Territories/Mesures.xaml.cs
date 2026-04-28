@@ -34,19 +34,19 @@ namespace Smart_Territories
                     moreInfo = "Origine : Poussières de chantier, érosion des sols, chantiers, usure des freins/pneus.\n\nSanté : Retenues principalement dans le nez et les voies supérieures. Inflammation, asthme et bronchites.";
                     break;
                 case "O3":
-                    title = "Ozone (O3) - Informations Détaillées";
+                    title = "Ozone (O₃) - Informations Détaillées";
                     moreInfo = "Origine : Polluant secondaire formé par réaction entre NOx et COV sous l'effet du soleil (fortes chaleurs).\n\nSanté : Puissant oxydant, irrite les yeux et les voies respiratoires.\n\nEnvironnement : Altère la croissance des plantes.";
                     break;
                 case "NO2":
-                    title = "Dioxyde d'azote (NO2) - Détaillées";
+                    title = "Dioxyde d'azote (NO₂) - Détaillées";
                     moreInfo = "Origine : Combustion à haute température, moteurs Diesel.\n\nSanté : Gaz toxique, irritant pour les bronches. Augmente la sensibilité aux infections respiratoires.";
                     break;
                 case "SO2":
-                    title = "Dioxyde de soufre (SO2) - Détaillées";
+                    title = "Dioxyde de soufre (SO₂) - Détaillées";
                     moreInfo = "Origine : Combustion de charbon et pétrole industriel.\n\nSanté : Irritation sévère des voies respiratoires.\n\nEnvironnement : Responsable des pluies acides.";
                     break;
                 case "CO2":
-                    title = "Dioxyde de carbone (CO2) - Détaillées";
+                    title = "Dioxyde de carbone (CO₂) - Détaillées";
                     moreInfo = "Origine : Respiration humaine, énergies fossiles.\n\nConfort : Indicateur de confinement. > 1000 ppm : fatigue, maux de tête, baisse de concentration.";
                     break;
                 case "HPA":
@@ -62,7 +62,7 @@ namespace Smart_Territories
                     moreInfo = "Forte humidité : Peut agglomérer les particules fines les rendant plus lourdes. Brouillard : Maintient les polluants près du sol.";
                     break;
                 case "O2":
-                    title = "Oxygène Dissous (O2) - Santé de l'eau";
+                    title = "Oxygène Dissous (O₂) - Santé de l'eau";
                     moreInfo = "Crucial pour la faune aquatique. Une baisse (anoxie) peut être causée par la décomposition massive de matière organique suite à une pollution.\n\nNiveau sain : 7 à 11 mg/L.";
                     break;
                 case "UTN":

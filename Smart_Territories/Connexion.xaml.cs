@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Smart_Territories.Models;
 
 namespace Smart_Territories
 {
@@ -101,17 +102,42 @@ namespace Smart_Territories
             {
                 // 1. Vérifier si l'utilisateur existe déjà
                 HttpResponseMessage checkResponse = await client.GetAsync($"{apiUrl}?username={identifiant}");
-                string checkJson = await checkResponse.Content.ReadAsStringAsync();
 
-                // Si MockAPI renvoie un résultat (pas un tableau vide "[]" ou "Not found")
-                if (checkJson != "[]" && checkJson != "Not found")
+                if (checkResponse.IsSuccessStatusCode)
                 {
-                    ShowMessage("Cet identifiant est déjà pris.", true);
-                    ToggleButtons(true);
-                    return;
-                }
+                    string checkJson = await checkResponse.Content.ReadAsStringAsync();
 
-                ShowMessage("Création du compte...", false);
+                    if (!string.IsNullOrWhiteSpace(checkJson) && checkJson != "Not found" && checkJson != "[]")
+                    {
+                        try
+                        {
+                            // On demande à C# de lire intelligemment le JSON
+                            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                            var existingUsers = JsonSerializer.Deserialize<UserAccount[]>(checkJson, options);
+
+                            if (existingUsers != null && existingUsers.Length > 0)
+                            {
+                                // On boucle pour vérifier la correspondance exacte (sensible à la casse)
+                                bool isTaken = false;
+                                foreach (var user in existingUsers)
+                                {
+                                    if (user.username == identifiant) isTaken = true;
+                                }
+
+                                if (isTaken)
+                                {
+                                    ShowMessage("Cet identifiant est déjà pris.", true);
+                                    ToggleButtons(true);
+                                    return; // Bloque la création
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Si MockAPI renvoie quelque chose d'illisible, on l'ignore
+                        }
+                    }
+                }
 
                 // 2. Préparer les données du nouvel utilisateur
                 var newUser = new UserAccount
@@ -166,11 +192,5 @@ namespace Smart_Territories
 
     // --- MODÈLE DE DONNÉES ---
     // Cette classe indique à C# comment lire le JSON de MockAPI
-    public class UserAccount
-    {
-        public string id { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public string email { get; set; }
-    }
+    
 }
