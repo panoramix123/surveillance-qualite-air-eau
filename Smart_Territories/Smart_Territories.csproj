@@ -13,6 +13,7 @@
     <None Remove="Images\image_ecfd22 - Copier.png" />
     <None Remove="Images\image_ecfd22.png" />
     <None Remove="Images\Info-bulle.png" />
+    <None Remove="Images\Smart_territories_logo.png" />
     <None Remove="Images\wind-best - Copier.png" />
     <None Remove="Images\wind-best.png" />
     <None Remove="Images\wind.png" />
@@ -30,6 +31,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\Info-bulle.png" />
+    <Resource Include="Images\Smart_territories_logo.png" />
     <Resource Include="Images\wind-best - Copier.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

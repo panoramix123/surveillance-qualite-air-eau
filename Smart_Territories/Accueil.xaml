@@ -11,9 +11,9 @@
     <Grid Background="Gray">
         <StackPanel Margin="20">
             <StackPanel Orientation="Horizontal">
-                <Image Width="50" 
-                       Height="50" 
-                       Source="Images/wind-best - Copier.png"/>
+                <Image Width="175" 
+                       Stretch="Uniform"
+                       Source="Images/Smart_territories_logo.png"/>
                 
                 <TextBlock Text="SafeBreath" 
                            Foreground="Black" 

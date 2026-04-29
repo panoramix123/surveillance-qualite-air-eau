@@ -44,7 +44,7 @@ namespace Smart_Territories.Services
 
             // Le service gère son propre chronomètre, indépendant des pages
             _bgTimer = new DispatcherTimer();
-            _bgTimer.Interval = TimeSpan.FromSeconds(5);
+            _bgTimer.Interval = TimeSpan.FromSeconds(1800);
             _bgTimer.Tick += async (s, e) => await FetchAndAppendDataAsync();
             _bgTimer.Start();
 
