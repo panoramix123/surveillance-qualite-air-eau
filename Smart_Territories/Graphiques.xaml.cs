@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,37 +11,40 @@ namespace Smart_Territories
 {
     public partial class Graphiques : Page
     {
-        private static readonly HttpClient client = new HttpClient();
-        private readonly string apiUrl = "https://69d420fdd396bd74235ccb69.mockapi.io/users/mesures";
-
-        // Liste complète stockée en mémoire pour éviter de rappeler l'API à chaque clic
-        private List<PollutantChart> allCharts = new List<PollutantChart>();
-        private List<PollutantSelectorItem> selectorItems = new List<PollutantSelectorItem>();
+        private List<PollutantChart> allCharts;
+        private List<PollutantSelectorItem> selectorItems;
 
         public Graphiques()
         {
             InitializeComponent();
-            this.Loaded += async (s, e) => await LoadDataAsync();
+
+            // On s'abonne à l'événement global : à chaque nouveau JSON, la fonction UpdateDisplay s'exécute
+            ApiService.Instance.DataUpdated += UpdateDisplay;
+
+            this.Loaded += Page_Loaded;
+            this.Unloaded += Page_Unloaded; // INDISPENSABLE pour éviter les fuites de mémoire
         }
 
-        private async Task LoadDataAsync()
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                string json = await client.GetStringAsync(apiUrl);
-                allCharts = JsonSerializer.Deserialize<List<PollutantChart>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            // On récupère les données de l'instance immortelle
+            allCharts = ApiService.Instance.Charts;
 
-                // Initialiser le menu de sélection à gauche
+            if (selectorItems == null)
+            {
                 selectorItems = allCharts.Select(c => new PollutantSelectorItem { Name = c.Title, IsSelected = true }).ToList();
                 PollutantSelector.ItemsSource = selectorItems;
-
-                UpdateDisplay();
             }
-            catch { MessageBox.Show("Erreur API"); }
+
+            UpdateDisplay();
         }
 
-        // Met à jour les graphiques affichés selon les CheckBox et la Fréquence
-        // Met à jour les graphiques affichés selon les CheckBox et la Fréquence
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // DÉCONNEXION OBLIGATOIRE quand on quitte l'onglet
+            ApiService.Instance.DataUpdated -= UpdateDisplay;
+        }
+
         private void UpdateDisplay()
         {
             if (allCharts == null || ChartsContainer == null || TxtTitle == null) return;
@@ -52,22 +52,24 @@ namespace Smart_Territories
             var selectedNames = selectorItems.Where(i => i.IsSelected).Select(i => i.Name).ToList();
             var filtered = allCharts.Where(c => selectedNames.Contains(c.Title)).ToList();
 
-            // LECTURE DU CURSEUR (au lieu de la ComboBox)
-            int intervalHours = (int)(SliderFrequency?.Value ?? 24);
-
-            // On instancie notre nouveau service de calcul
-            var simulator = new DataSimulator();
-
             foreach (var chart in filtered)
             {
-                // On délègue le travail mathématique au service
-                chart.DisplayPoints = simulator.GenerateSimulatedPoints(chart, intervalHours);
+                chart.DisplayPoints = new List<ChartPoint>(chart.Points);
                 CalculateCoordinates(chart);
             }
 
             ChartsContainer.ItemsSource = null;
             ChartsContainer.ItemsSource = filtered;
-            TxtTitle.Text = selectedNames.Count == 0 ? "Aucun polluant sélectionné" : "Analyses détaillées";
+            TxtTitle.Text = selectedNames.Count == 0 ? "Aucun polluant sélectionné" : "Analyses détaillées (En Direct)";
+        }
+
+        private void SliderFrequency_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int seconds = (int)e.NewValue;
+            if (TxtSliderValue != null) TxtSliderValue.Text = $"{seconds}s";
+
+            // On envoie la nouvelle vitesse au chronomètre du Singleton
+            ApiService.Instance.ChangeInterval(seconds);
         }
 
         private void CalculateCoordinates(PollutantChart chart)
@@ -99,11 +101,5 @@ namespace Smart_Territories
         }
 
         private void CheckBox_FilterChanged(object sender, RoutedEventArgs e) => UpdateDisplay();
-        private void SliderFrequency_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            // Met à jour le petit texte à côté du curseur (ex: "6h")
-            if (TxtSliderValue != null) TxtSliderValue.Text = $"{e.NewValue}h";
-            UpdateDisplay();
-        }
     }  
 }
