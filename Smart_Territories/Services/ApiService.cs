@@ -14,7 +14,8 @@ namespace Smart_Territories.Services
     {
         // 1. LE SINGLETON : L'unique instance immortelle pour toute l'application
         private static readonly HttpClient client = new HttpClient();
-        private readonly string apiUrl = "https://smart-territories.enzofile.fr/api.php";
+        private readonly string apiUrl = "https://smart-territories.enzofile.fr/api_v2.php?capteur=2";
+        private readonly string apiKey = "CIEL_2026_Smart_Territories_Secret";
 
         // 2. ENSUITE SEULEMENT ON CRÉE LE SINGLETON (qui va utiliser les outils ci-dessus)
         public static ApiService Instance { get; } = new ApiService();
@@ -61,7 +62,12 @@ namespace Smart_Territories.Services
         {
             try
             {
-                string json = await client.GetStringAsync(apiUrl);
+                using var request = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+                request.Headers.Add("x-api-key", apiKey);
+
+                using var responseHttp = await client.SendAsync(request);
+                responseHttp.EnsureSuccessStatusCode(); // Coupe l'exécution si la clé est refusée
+                string json = await responseHttp.Content.ReadAsStringAsync();
                 var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                 var response = JsonSerializer.Deserialize<ApiResponse>(json, options);
 

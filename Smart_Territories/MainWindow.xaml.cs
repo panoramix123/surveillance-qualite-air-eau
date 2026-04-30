@@ -64,6 +64,11 @@ namespace Smart_Territories
             MainFrame.Navigate(new Uri("Graphiques.xaml", UriKind.Relative));
         }
 
+        private void BtnNavPollens_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new Uri("Pollens.xaml", UriKind.Relative));
+        }
+
         private void BtnNavAlerter_Click(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new Uri("Alerter.xaml", UriKind.Relative));

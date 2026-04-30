@@ -1,0 +1,19 @@
+﻿<Page x:Class="Smart_Territories.Pollens"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+      Title="Pollens">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Carte des Pollens (En direct)" Foreground="Black" FontSize="24" FontWeight="Bold" FontFamily="Fonts/#Dosis" Margin="20" />
+
+        <wv2:WebView2 x:Name="NavigateurPollen" Grid.Row="1" Margin="20,0,20,20" 
+                      Source="https://www.atmo-france.org/indiceatmo?bbox=-3.054199,46.749271,2.186279,48.427378&amp;ind=pollen"
+                      NavigationCompleted="NavigateurPollen_NavigationCompleted" />
+    </Grid>
+</Page>

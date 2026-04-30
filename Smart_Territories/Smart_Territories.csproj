@@ -21,8 +21,9 @@
 
   <ItemGroup>
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3912.50" />
     <PackageReference Include="ProEssentials.Chart.Net80.Wpf" Version="10.0.0.22" />
-    <PackageReference Include="Syncfusion.SfChart.WPF" Version="33.1.45" />
+    <PackageReference Include="Syncfusion.SfChart.WPF" Version="33.2.4" />
   </ItemGroup>
 
   <ItemGroup>

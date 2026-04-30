@@ -121,6 +121,7 @@
                 <Button Content="Cartes" Style="{StaticResource MenuLinkStyle}" Click="BtnNavCartes_Click"/>
                 <Button Content="Mesures" Style="{StaticResource MenuLinkStyle}" Click="BtnNavMesures_Click"/>
                 <Button Content="Graphiques" Style="{StaticResource MenuLinkStyle}" Click="BtnNavGraphiques_Click"/>
+                <Button Content="Pollens" Style="{StaticResource MenuLinkStyle}" Click="BtnNavPollens_Click"/>
                 <Button Content="Alerter" Style="{StaticResource MenuLinkStyle}" Click="BtnNavAlerter_Click"/>
                 <Button Content="Paramètres" Style="{StaticResource MenuLinkStyle}" Click="BtnNavParametres_Click"/>
             </StackPanel>
