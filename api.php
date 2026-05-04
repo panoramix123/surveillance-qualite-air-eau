@@ -56,7 +56,7 @@ try {
                 echo "Attention : Capteur [$dev_id] non référencé dans la table EQUIPEMENT\n";
             }
         }
-    }, 0);
+    }, );
 
     // Garde le script en vie
     $mqtt->loop(true);

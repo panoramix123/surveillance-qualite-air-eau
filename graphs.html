@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Étude Indice de Qualité de l’Air - Carte</title>
+  <title>Étude Indice de Qualité de l’Air - Graphiques</title>
+
   <link rel="stylesheet" href="/CSS/style.css">
-  <link rel="stylesheet" href="/CSS/map.css">
+  <link rel="stylesheet" href="/CSS/graphs.css">
 </head>
-<body class="page-map">
+
+<body class="page-graphs">
 
   <header class="topbar">
     <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
@@ -64,44 +66,57 @@
     </div>
   </aside>
 
-  <main class="main-content">
-    <section class="content-card map-card">
-      <h2>Polluants atmosphériques instantanés</h2>
+  <main class="graphs-main">
+    <section class="graphs-card">
 
-      <div class="map-layout">
-        <div class="pollutants-panel">
-          <h3>Taux de polluants instantanés :</h3>
+      <h2>Polluants atmosphériques:</h2>
 
-          <ul>
-            <li>Particules Fines (PM2,5) = <span id="pm25-value"></span> µg/m<sup>3</sup></li>
-            <li>Micros-Particules (PM10) = <span id="pm10-value"></span> µg/m<sup>3</sup></li>
-            <li>Dioxyde d'azote (NO2) = <span id="no2-value"></span> µg/m<sup>3</sup></li>
-            <li>Ozone (O3) = <span id="o3-value"></span> µg/m<sup>3</sup></li>
-            <li>Dioxyde de soufre (SO2) = <span id="so2-value"></span> µg/m<sup>3</sup></li>
-            <li class="co2-line">Dioxyde de carbone (CO2) = <span id="co2-value"></span> mg/m<sup>3</sup></li>
-          </ul>
-        </div>
+      <div class="graphs-layout">
 
-        <div class="map-panel">
-          <div class="location-badge">
-            <strong id="site-name"></strong>
-            <span id="site-coords"></span>
+        <div class="pollution-graph-box">
+          <h3>Historique des polluants</h3>
+
+          <div class="svg-chart-wrapper">
+            <svg id="pollutantsSvg" viewBox="0 0 900 430" preserveAspectRatio="none"></svg>
+
+            <div id="data-error" class="data-error hidden">
+              Erreur d’acquisition des données
+            </div>
           </div>
 
-          <div class="map-visual">
-            <div class="map-line"></div>
-            <div class="map-focus"></div>
+          <div id="chart-legend" class="chart-legend"></div>
+        </div>
 
-            <img
-              src="Assets/Maps/Carte_St_Gemmes.png"
-              alt="Carte de Saint-Gemmes-sur-Loire"
-            >
+        <div class="co2-graph-box">
+          <h3>TAUX DE CO2</h3>
+
+          <div class="co2-info">
+            <p>Pic max</p>
+            <strong><span id="co2-max-value">--</span> mg/m<sup>3</sup></strong>
+            <p>Date : <span id="co2-max-date">--</span></p>
+          </div>
+
+          <div class="co2-bar-graph">
+            <div class="co2-max-bar">
+              <span id="co2-max-bar-value">--</span>
+
+              <div class="co2-current-bar" id="co2-current-bar">
+                <span id="co2-current-bar-value">--</span>
+              </div>
+            </div>
+
+            <div class="co2-current-label">
+              <p>Taux instant.</p>
+              <strong><span id="co2-current-value">--</span> mg/m<sup>3</sup></strong>
+            </div>
           </div>
         </div>
+
       </div>
+
     </section>
   </main>
 
-  <script src="JS/script.js"></script>
+  <script src="JS/graphs.js"></script>
 </body>
 </html>

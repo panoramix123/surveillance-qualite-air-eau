@@ -1,22 +1,15 @@
 {
-  "site": {
-    "nom": "ST Gemmes-sur-Loire",
-    "latitude": 47.423785,
-    "longitude": -0.558774
+  "capteur": {
+    "id": 1
   },
-  "polluants": {
+  "données capteurs": {
   "pm25": 10,
   "pm10": 12,
   "no2": 8,
   "o3": 9,
   "so2": 7,
-  "co2": 6
-  },
-  "dashboard": {
-    "qualite_air": "Bon",
-    "polluant_principal": "PM10",
-    "valeur_polluant_principal": 5.2,
-    "temperature": 16,
-    "humidite": 24
+  "co2": 6,
+  "temperature": 16,
+  "humidite": 24
   }
 }
