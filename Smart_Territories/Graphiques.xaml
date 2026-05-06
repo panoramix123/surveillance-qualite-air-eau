@@ -1,112 +1,105 @@
 ﻿<Page x:Class="Smart_Territories.Graphiques"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Graphiques">
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      Title="Graphiques"
+      FontFamily="Fonts/#Dosis"
+      Background="Transparent">
 
-    <Grid Background="Gray">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Zone de contrôles -->
+            <RowDefinition Height="Auto"/>
+            <!-- Titre -->
+            <RowDefinition Height="*"/>
+            <!-- Graphique -->
+        </Grid.RowDefinitions>
 
-        <Border Background="DarkGray" BorderBrush="#333333" BorderThickness="0,0,1,0">
-            <StackPanel Margin="15">
-                <TextBlock Text="Réglages" FontSize="20" FontWeight="Bold" FontFamily="Fonts/#Dosis" Margin="0,0,0,20"/>
+        <!-- ZONE 1 : Barre de filtres -->
+        <Border Grid.Row="0" Background="#2C2C2C" CornerRadius="8" Padding="15" Margin="0,0,0,20">
+            <WrapPanel VerticalAlignment="Center">
 
-                <TextBlock Text="Temps entre mesures :" FontWeight="Bold" FontFamily="Fonts/#Dosis" Margin="0,0,0,5"/>
-
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                    <Slider x:Name="SliderFrequency" 
-                            Minimum="1" Maximum="3600" 
-                            Value="1800" TickFrequency="1" 
-                            IsSnapToTickEnabled="True" 
-                            Width="130" 
-                            ValueChanged="SliderFrequency_ValueChanged"/>
-
-                    <TextBlock x:Name="TxtSliderValue" Text="24h" FontFamily="Fonts/#Dosis" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                <StackPanel Margin="0,0,25,0">
+                    <TextBlock Text="Capteur cible :" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="ComboCapteurs" Width="150" SelectionChanged="ComboCapteurs_SelectionChanged" Padding="4">
+                        <ComboBoxItem Content="Capteur 1" Tag="1" IsSelected="True" />
+                        <ComboBoxItem Content="Capteur 2" Tag="2" />
+                    </ComboBox>
                 </StackPanel>
 
-                <TextBlock Text="Afficher :" FontWeight="Bold" FontFamily="Fonts/#Dosis" Margin="0,0,0,10"/>
-                <ItemsControl x:Name="PollutantSelector">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Content="{Binding Name}" 
-                                      IsChecked="{Binding IsSelected}" 
-                                      Checked="CheckBox_FilterChanged" 
-                                      Unchecked="CheckBox_FilterChanged"
-                                      FontFamily="Fonts/#Dosis" Margin="0,0,0,8"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
+                <StackPanel Margin="0,0,25,0">
+                    <TextBlock Text="Donnée à analyser :" Foreground="#AAAAAA" Margin="0,0,0,5"/>
+                    <ComboBox x:Name="ComboPolluant" Width="220" SelectionChanged="ComboPolluant_SelectionChanged" Padding="4">
+                        <ComboBoxItem Content="Ozone (O₃)" Tag="Ozone O₃ (µg/m³)" IsSelected="True"/>
+                        <ComboBoxItem Content="Particules (PM₁₀)" Tag="PM₁₀ (µg/m³)"/>
+                        <ComboBoxItem Content="Particules fines (PM₂.₅)" Tag="PM₂.₅ (µg/m³)"/>
+                        <ComboBoxItem Content="Dioxyde d'azote (NO₂)" Tag="Dioxyde d'azote NO₂ (µg/m³)"/>
+                        <ComboBoxItem Content="Dioxyde de soufre (SO₂)" Tag="Dioxyde de soufre SO₂ (µg/m³)"/>
+                        <ComboBoxItem Content="Dioxyde de carbone (CO₂)" Tag="Dioxyde de carbone CO₂ (ppm)"/>
+                        <ComboBoxItem Content="Pression atmosphérique" Tag="Pression atmosphérique (hPa)"/>
+                        <ComboBoxItem Content="Température" Tag="Température (°C)"/>
+                        <ComboBoxItem Content="Taux d'humidité" Tag="Taux d'humidité (%)"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,4">
+                    <CheckBox x:Name="CheckSeuils" Content="Afficher les seuils de santé publique (OMS)" Foreground="White" FontSize="14" Checked="CheckSeuils_Changed" Unchecked="CheckSeuils_Changed"/>
+                </StackPanel>
+
+            </WrapPanel>
         </Border>
 
-        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="20">
-                <TextBlock x:Name="TxtTitle" Text="Analyses détaillées" 
-                           FontFamily="Fonts/#Dosis" FontSize="28" FontWeight="Bold" Foreground="Black" Margin="10,0,0,15"/>
+        <!-- ZONE 2 : Titre dynamique -->
+        <TextBlock x:Name="TxtTitreGraph" Grid.Row="1" Text="Ozone (O₃), en temps réel" Foreground="Black" FontSize="22" FontWeight="Bold" Margin="0,0,0,15"/>
 
-                <ItemsControl x:Name="ChartsContainer">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Width="350" Height="220" Background="DarkGray" CornerRadius="8" Padding="15" Margin="10">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
+        <!-- ZONE 3 : Le graphique avec détection de la souris -->
+        <Grid Grid.Row="2" Margin="0,10,0,0">
+            <TextBlock x:Name="TxtUnite" Text="µg/m³" Foreground="#555555" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" Panel.ZIndex="1"/>
 
-                                    <TextBlock Text="{Binding Title}" FontFamily="Fonts/#Dosis" FontSize="16" FontWeight="Bold" Foreground="Black"/>
+            <lvc:CartesianChart x:Name="MonGraphique" Margin="0,20,0,0" MouseMove="MonGraphique_MouseMove" MouseLeave="MonGraphique_MouseLeave">
 
-                                    <Canvas Grid.Row="1" Width="300" Height="130" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-                                        <Polyline Points="{Binding LinePoints}" Stroke="#333333" StrokeThickness="3" StrokeLineJoin="Round"/>
-                                        <ItemsControl ItemsSource="{Binding Points}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <Canvas/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Canvas>
-                                                        <TextBlock Text="{Binding Value}" FontSize="9" FontFamily="Fonts/#Dosis" 
-                                                                   Canvas.Left="{Binding TextX}" Canvas.Top="{Binding TextY}"/>
-                                                        <Ellipse Width="6" Height="6" Fill="White" Stroke="#333333" 
-                                                                 Canvas.Left="{Binding PointX}" Canvas.Top="{Binding PointY}"/>
-                                                    </Canvas>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </Canvas>
+                <lvc:CartesianChart.Series>
+                    <lvc:LineSeries Title="Mesure" Values="{Binding Valeurs}" Stroke="#00BFFF" Fill="Transparent" PointGeometrySize="8"/>
+                </lvc:CartesianChart.Series>
 
-                                    <ItemsControl Grid.Row="2" ItemsSource="{Binding DisplayPoints}" Width="300" HorizontalAlignment="Center" Margin="0,5,0,0">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <Canvas Height="15"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Canvas>
-                                                    <TextBlock Text="{Binding AxisLabel}" FontSize="9" FontFamily="Fonts/#Dosis" 
-                                                               Foreground="#555555" FontWeight="Medium" 
-                                                               Canvas.Left="{Binding AxisX}"/>
-                                                </Canvas>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </ScrollViewer>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:AxesCollection>
+                        <lvc:Axis Labels="{Binding LabelsTemps}" Foreground="Black">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1" Stroke="#CCCCCC" />
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:AxesCollection>
+                </lvc:CartesianChart.AxisX>
+
+                <lvc:CartesianChart.AxisY>
+                    <lvc:AxesCollection>
+                        <lvc:Axis x:Name="AxeY" Foreground="Black">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Stroke="#CCCCCC" />
+                            </lvc:Axis.Separator>
+
+                            <lvc:Axis.Sections>
+                                <lvc:SectionsCollection>
+                                    <lvc:AxisSection x:Name="LigneSeuilInfo" Value="180" StrokeThickness="4" Stroke="#F39C12" Visibility="Hidden" IsHitTestVisible="True"/>
+                                    <lvc:AxisSection x:Name="LigneSeuilAlerte" Value="240" StrokeThickness="4" Stroke="#E74C3C" Visibility="Hidden" IsHitTestVisible="True"/>
+                                </lvc:SectionsCollection>
+                            </lvc:Axis.Sections>
+
+                        </lvc:Axis>
+                    </lvc:AxesCollection>
+                </lvc:CartesianChart.AxisY>
+
+            </lvc:CartesianChart>
+        </Grid>
+
+        <!-- L'infobulle flottante au survol -->
+        <Popup x:Name="PopupSeuil" Placement="Mouse" AllowsTransparency="True" IsHitTestVisible="False">
+            <Border x:Name="BorderPopup" Background="#E74C3C" Padding="10,6" CornerRadius="4" Margin="15,15,0,0">
+                <TextBlock x:Name="TxtPopupSeuil" Foreground="White" FontWeight="Bold" FontSize="14"/>
+            </Border>
+        </Popup>
+
     </Grid>
 </Page>

@@ -4,102 +4,166 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Smart_Territories.Models;
+using LiveCharts;
+using LiveCharts.Wpf;
 using Smart_Territories.Services;
+using System.ComponentModel;
 
 namespace Smart_Territories
 {
-    public partial class Graphiques : Page
+    public partial class Graphiques : Page, INotifyPropertyChanged
     {
-        private List<PollutantChart> allCharts;
-        private List<PollutantSelectorItem> selectorItems;
+        // Correction du warning CS8612 sur la nullabilité
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private ChartValues<double> _valeurs = new ChartValues<double>();
+        public ChartValues<double> Valeurs
+        {
+            get => _valeurs;
+            set { _valeurs = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Valeurs))); }
+        }
+
+        private ChartValues<string> _labelsTemps = new ChartValues<string>();
+        public ChartValues<string> LabelsTemps
+        {
+            get => _labelsTemps;
+            set { _labelsTemps = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LabelsTemps))); }
+        }
 
         public Graphiques()
         {
             InitializeComponent();
+            DataContext = this;
 
-            // On s'abonne à l'événement global : à chaque nouveau JSON, la fonction UpdateDisplay s'exécute
-            ApiService.Instance.DataUpdated += UpdateDisplay;
-
-            this.Loaded += Page_Loaded;
-            this.Unloaded += Page_Unloaded; // INDISPENSABLE pour éviter les fuites de mémoire
+            ApiService.Instance.DataUpdated += UpdateChart;
+            this.Loaded += (s, e) => UpdateChart();
+            this.Unloaded += (s, e) => ApiService.Instance.DataUpdated -= UpdateChart;
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private void UpdateChart()
         {
-            // On récupère les données de l'instance immortelle
-            allCharts = ApiService.Instance.Charts;
-
-            if (selectorItems == null)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                selectorItems = allCharts.Select(c => new PollutantSelectorItem { Name = c.Title, IsSelected = true }).ToList();
-                PollutantSelector.ItemsSource = selectorItems;
+                if (TxtTitreGraph == null || ComboPolluant == null) return;
+
+                if (ComboPolluant.SelectedItem is ComboBoxItem item)
+                {
+                    string nomPolluantCherche = item.Tag?.ToString() ?? "";
+                    TxtTitreGraph.Text = item.Content.ToString() + ", en temps réel";
+
+                    var historique = ApiService.Instance.Charts.FirstOrDefault(c => c.Title == nomPolluantCherche);
+
+                    Valeurs.Clear();
+                    LabelsTemps.Clear();
+
+                    if (historique != null && historique.Points.Count > 0)
+                    {
+                        foreach (var point in historique.Points)
+                        {
+                            Valeurs.Add(point.Value);
+                            LabelsTemps.Add(point.Label);
+                        }
+                    }
+
+                    AjusterAxeEtSeuils(nomPolluantCherche);
+                }
+            });
+        }
+
+        private void AjusterAxeEtSeuils(string polluant)
+        {
+            string unite = "";
+            double minV = 0;
+            Func<double, string> formatAxeY = val => val.ToString("0");
+
+            switch (polluant)
+            {
+                case "Ozone O₃ (µg/m³)":
+                    LigneSeuilInfo.Value = 180; LigneSeuilAlerte.Value = 240; unite = "µg/m³"; break;
+                case "PM₁₀ (µg/m³)":
+                    LigneSeuilInfo.Value = 50; LigneSeuilAlerte.Value = 80; unite = "µg/m³"; break;
+                case "PM₂.₅ (µg/m³)":
+                    LigneSeuilInfo.Value = 25; LigneSeuilAlerte.Value = 50; unite = "µg/m³"; break;
+                case "Dioxyde de carbone CO₂ (ppm)":
+                    LigneSeuilInfo.Value = 1000; LigneSeuilAlerte.Value = 1500; unite = "ppm"; break;
+                case "Dioxyde d'azote NO₂ (µg/m³)":
+                    LigneSeuilInfo.Value = 200; LigneSeuilAlerte.Value = 400; unite = "µg/m³"; break;
+                case "Dioxyde de soufre SO₂ (µg/m³)":
+                    LigneSeuilInfo.Value = 300; LigneSeuilAlerte.Value = 500; unite = "µg/m³"; break;
+                case "Pression atmosphérique (hPa)":
+                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = "hPa"; minV = double.NaN;
+                    formatAxeY = val => val.ToString("0.0"); break;
+                case "Température (°C)":
+                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = "°C"; minV = double.NaN;
+                    formatAxeY = val => val.ToString("0.0"); break;
+                case "Taux d'humidité (%)":
+                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = "%"; break;
+                default:
+                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = ""; break;
             }
 
-            UpdateDisplay();
+            AxeY.LabelFormatter = formatAxeY;
+            if (TxtUnite != null) TxtUnite.Text = unite;
+            AxeY.MinValue = minV;
+
+            CheckSeuils.IsEnabled = LigneSeuilInfo.Value != -1;
+            if (!CheckSeuils.IsEnabled) CheckSeuils.IsChecked = false;
+
+            AppliquerAffichageSeuils();
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        private void AppliquerAffichageSeuils()
         {
-            // DÉCONNEXION OBLIGATOIRE quand on quitte l'onglet
-            ApiService.Instance.DataUpdated -= UpdateDisplay;
-        }
+            bool show = CheckSeuils.IsChecked == true && LigneSeuilInfo.Value > 0;
+            LigneSeuilInfo.Visibility = show ? Visibility.Visible : Visibility.Hidden;
+            LigneSeuilAlerte.Visibility = show ? Visibility.Visible : Visibility.Hidden;
 
-        private void UpdateDisplay()
-        {
-            if (allCharts == null || ChartsContainer == null || TxtTitle == null) return;
-
-            var selectedNames = selectorItems.Where(i => i.IsSelected).Select(i => i.Name).ToList();
-            var filtered = allCharts.Where(c => selectedNames.Contains(c.Title)).ToList();
-
-            foreach (var chart in filtered)
+            if (show)
             {
-                chart.DisplayPoints = new List<ChartPoint>(chart.Points);
-                CalculateCoordinates(chart);
+                double maxCourbe = Valeurs.Count > 0 ? Valeurs.Max() : 0;
+                AxeY.MaxValue = maxCourbe > LigneSeuilAlerte.Value ? double.NaN : LigneSeuilAlerte.Value * 1.1;
             }
-
-            ChartsContainer.ItemsSource = null;
-            ChartsContainer.ItemsSource = filtered;
-            TxtTitle.Text = selectedNames.Count == 0 ? "Aucun polluant sélectionné" : "Analyses détaillées (En Direct)";
+            else AxeY.MaxValue = double.NaN;
         }
 
-        private void SliderFrequency_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            int seconds = (int)e.NewValue;
-            if (TxtSliderValue != null) TxtSliderValue.Text = $"{seconds}s";
+        private void ComboPolluant_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateChart();
 
-            // On envoie la nouvelle vitesse au chronomètre du Singleton
-            ApiService.Instance.ChangeInterval(seconds);
+        private void ComboCapteurs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboCapteurs.SelectedItem is ComboBoxItem item && ApiService.Instance != null)
+                ApiService.Instance.ChangerCapteur(item.Tag?.ToString() ?? "1");
         }
 
-        private void CalculateCoordinates(PollutantChart chart)
+        private void CheckSeuils_Changed(object sender, RoutedEventArgs e) => AppliquerAffichageSeuils();
+
+        // --- GESTION DU SURVOL (MOUSEMOVE) ---
+        public void MonGraphique_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            double h = 110.0; double w = 300.0;
-            chart.LinePoints = new PointCollection();
-            double xStep = w / (chart.DisplayPoints.Count - 1);
+            if (CheckSeuils.IsChecked != true || LigneSeuilInfo.Value == -1) { PopupSeuil.IsOpen = false; return; }
 
-            bool showMarkers = chart.DisplayPoints.Count <= 7;
-
-            for (int i = 0; i < chart.DisplayPoints.Count; i++)
+            try
             {
-                var p = chart.DisplayPoints[i];
-                double x = i * xStep;
-                double y = h - ((p.Value / chart.MaxValue) * h);
-                chart.LinePoints.Add(new Point(x, y));
+                var pos = e.GetPosition(MonGraphique);
+                double pAlerte = MonGraphique.ConvertToPixels(new Point(0, LigneSeuilAlerte.Value)).Y;
+                double pInfo = MonGraphique.ConvertToPixels(new Point(0, LigneSeuilInfo.Value)).Y;
 
-                p.PointX = x - 3;
-                p.PointY = y - 3;
-                p.TextX = x - 8;
-                p.TextY = y - 18;
-
-                // NOUVEAU : Position X pour le texte de l'axe des temps (décalage pour centrer le texte)
-                p.AxisX = x - 8;
-
-                p.LabelText = Math.Round(p.Value, 1).ToString();
-                p.MarkerVisibility = showMarkers ? Visibility.Visible : Visibility.Collapsed;
+                if (Math.Abs(pos.Y - pAlerte) <= 12)
+                {
+                    TxtPopupSeuil.Text = $"{LigneSeuilAlerte.Value} {TxtUnite.Text} - Seuil d'alerte";
+                    BorderPopup.Background = new SolidColorBrush(Color.FromRgb(231, 76, 60));
+                    PopupSeuil.IsOpen = true;
+                }
+                else if (Math.Abs(pos.Y - pInfo) <= 12)
+                {
+                    TxtPopupSeuil.Text = $"{LigneSeuilInfo.Value} {TxtUnite.Text} - Seuil d'information";
+                    BorderPopup.Background = new SolidColorBrush(Color.FromRgb(243, 156, 18));
+                    PopupSeuil.IsOpen = true;
+                }
+                else PopupSeuil.IsOpen = false;
             }
+            catch { PopupSeuil.IsOpen = false; }
         }
 
-        private void CheckBox_FilterChanged(object sender, RoutedEventArgs e) => UpdateDisplay();
-    }  
+        public void MonGraphique_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) => PopupSeuil.IsOpen = false;
+    }
 }

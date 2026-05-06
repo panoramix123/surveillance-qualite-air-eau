@@ -1,5 +1,6 @@
-﻿using System.Windows;
+﻿using System;
 using System.Windows.Controls;
+using Microsoft.Web.WebView2.Core;
 
 namespace Smart_Territories
 {
@@ -8,28 +9,32 @@ namespace Smart_Territories
         public Pollens()
         {
             InitializeComponent();
-            this.Unloaded += Page_Unloaded;
+            InitializeWebView();
         }
 
-        private async void NavigateurPollen_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        private async void InitializeWebView()
         {
-            // Le code JavaScript brut qui masque l'en-tête et le pied de page du site Atmo
-            string script = @"
-                var header = document.querySelector('header'); if(header) header.style.display = 'none';
-                var footer = document.querySelector('footer'); if(footer) footer.style.display = 'none';
-                var alertbar = document.querySelector('.alert-bar'); if(alertbar) alertbar.style.display = 'none';
-            ";
+            // Initialisation sécurisée du moteur Edge
+            await PollenWebView.EnsureCoreWebView2Async();
 
-            // On ordonne au navigateur d'exécuter ce script
-            await NavigateurPollen.CoreWebView2.ExecuteScriptAsync(script);
-        }
+            // Chargement de l'URL par le code (plus d'erreur MC3000)
+            PollenWebView.Source = new Uri("https://www.atmo-france.org/indiceatmo?bbox=-3.054199,46.749271,2.186279,48.427378&ind=pollen");
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (NavigateurPollen != null)
+            // Une fois la navigation terminée, on "découpe" la page pour l'esthétique
+            PollenWebView.NavigationCompleted += async (s, e) =>
             {
-                NavigateurPollen.Dispose();
-            }
+                // Ce script JS cache le header, le footer et centre la carte
+                string script = @"
+                    try {
+                        document.querySelector('header').style.display = 'none';
+                        document.querySelector('footer').style.display = 'none';
+                        document.querySelector('.breadcrumb').style.display = 'none';
+                        document.querySelector('.social-links').style.display = 'none';
+                        document.body.style.backgroundColor = '#f4f4f4'; // Fond neutre
+                    } catch(e) {}
+                ";
+                await PollenWebView.ExecuteScriptAsync(script);
+            };
         }
     }
 }

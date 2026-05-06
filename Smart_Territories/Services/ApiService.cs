@@ -14,8 +14,9 @@ namespace Smart_Territories.Services
     {
         // 1. LE SINGLETON : L'unique instance immortelle pour toute l'application
         private static readonly HttpClient client = new HttpClient();
-        private readonly string apiUrl = "https://smart-territories.enzofile.fr/api_v2.php?capteur=2";
+        private string apiUrl = "https://smart-territories.enzofile.fr/api_v2.php?capteur=1";
         private readonly string apiKey = "CIEL_2026_Smart_Territories_Secret";
+        public ApiData DernieresDonnees { get; private set; }
 
         // 2. ENSUITE SEULEMENT ON CRÉE LE SINGLETON (qui va utiliser les outils ci-dessus)
         public static ApiService Instance { get; } = new ApiService();
@@ -45,7 +46,7 @@ namespace Smart_Territories.Services
 
             // Le service gère son propre chronomètre, indépendant des pages
             _bgTimer = new DispatcherTimer();
-            _bgTimer.Interval = TimeSpan.FromSeconds(1800);
+            _bgTimer.Interval = TimeSpan.FromSeconds(15); //A modifier à 30 secondes pour la revue
             _bgTimer.Tick += async (s, e) => await FetchAndAppendDataAsync();
             _bgTimer.Start();
 
@@ -56,6 +57,26 @@ namespace Smart_Territories.Services
         public void ChangeInterval(int seconds)
         {
             _bgTimer.Interval = TimeSpan.FromSeconds(seconds);
+        }
+
+        public void ChangerCapteur(string idCapteur)
+        {
+            string nouvelleUrl = $"https://smart-territories.enzofile.fr/api_v2.php?capteur={idCapteur}";
+
+            if (apiUrl == nouvelleUrl) return;
+
+            apiUrl = nouvelleUrl;
+
+            //Efface l'historique de l'ancien capteur
+            foreach (var chart in Charts)
+            {
+                chart.Points.Clear();
+            }
+
+            // On prévient l'interface que les courbes sont remises à zéro
+            DataUpdated?.Invoke();
+
+            _ = FetchAndAppendDataAsync();
         }
 
         public async Task FetchAndAppendDataAsync()
@@ -73,6 +94,7 @@ namespace Smart_Territories.Services
 
                 if (response == null || response.data == null) return;
                 var d = response.data;
+                DernieresDonnees = d;
 
                 string timeLabel = DateTime.Now.ToString("HH:mm:ss");
 
@@ -80,6 +102,10 @@ namespace Smart_Territories.Services
                 {
                     if (!value.HasValue) return;
                     var chart = Charts.First(c => c.Title == title);
+
+                    // BLOQUEUR : Si la dernière mesure enregistrée a la même heure exacte, on annule l'ajout (Évite les doublons)
+                    if (chart.Points.Count > 0 && chart.Points.Last().Label == timeLabel) return;
+
                     chart.Points.Add(new ChartPoint { Label = timeLabel, Value = value.Value, AxisLabel = timeLabel });
                     if (chart.Points.Count > 15) chart.Points.RemoveAt(0);
                 }
