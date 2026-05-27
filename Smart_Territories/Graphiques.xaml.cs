@@ -136,32 +136,44 @@ namespace Smart_Territories
 
         private void CheckSeuils_Changed(object sender, RoutedEventArgs e) => AppliquerAffichageSeuils();
 
-        // --- GESTION DU SURVOL (MOUSEMOVE) ---
+        // --- GESTION DU SURVOL DYNAMIQUE (MOUSEMOVE) ---
         public void MonGraphique_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
+            // Clause de garde : On coupe la détection si les seuils sont masqués ou invalides
             if (CheckSeuils.IsChecked != true || LigneSeuilInfo.Value == -1) { PopupSeuil.IsOpen = false; return; }
 
             try
             {
+                // 1. Récupération des coordonnées cartésiennes de la souris sur l'IHM
                 var pos = e.GetPosition(MonGraphique);
+
+                // 2. Traduction mathématique des valeurs physiques des seuils en pixels écran Y
                 double pAlerte = MonGraphique.ConvertToPixels(new Point(0, LigneSeuilAlerte.Value)).Y;
                 double pInfo = MonGraphique.ConvertToPixels(new Point(0, LigneSeuilInfo.Value)).Y;
 
+                // 3. Calcul de proximité pour le seuil critique d'alerte (Tolérance de 12 pixels)
                 if (Math.Abs(pos.Y - pAlerte) <= 12)
                 {
                     TxtPopupSeuil.Text = $"{LigneSeuilAlerte.Value} {TxtUnite.Text} - Seuil d'alerte";
-                    BorderPopup.Background = new SolidColorBrush(Color.FromRgb(231, 76, 60));
-                    PopupSeuil.IsOpen = true;
+                    BorderPopup.Background = new SolidColorBrush(Color.FromRgb(231, 76, 60)); // Fond Rouge
+                    PopupSeuil.IsOpen = true; // Affichage de l'infobulle WPF
                 }
+                // 4. Calcul de proximité pour le seuil d'information
                 else if (Math.Abs(pos.Y - pInfo) <= 12)
                 {
                     TxtPopupSeuil.Text = $"{LigneSeuilInfo.Value} {TxtUnite.Text} - Seuil d'information";
-                    BorderPopup.Background = new SolidColorBrush(Color.FromRgb(243, 156, 18));
+                    BorderPopup.Background = new SolidColorBrush(Color.FromRgb(243, 156, 18)); // Fond Orange
                     PopupSeuil.IsOpen = true;
                 }
-                else PopupSeuil.IsOpen = false;
+                else
+                {
+                    PopupSeuil.IsOpen = false; // Fermeture si la souris s'éloigne
+                }
             }
-            catch { PopupSeuil.IsOpen = false; }
+            catch
+            {
+                PopupSeuil.IsOpen = false; // Sécurité anti-crash lors des phases de transition
+            }
         }
 
         public void MonGraphique_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e) => PopupSeuil.IsOpen = false;

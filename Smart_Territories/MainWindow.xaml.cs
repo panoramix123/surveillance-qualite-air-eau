@@ -1,19 +1,21 @@
 ﻿using System;
+using System.Net;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Smart_Territories
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
 
-            // Ajouter cette ligne pour charger le contenu de bienvenue au démarrage
+            // Charge les données du tableau JSON dès le lancement
+            _ = Services.ApiService.Instance.FetchAndAppendDataAsync();
+
+            // Charger le contenu de bienvenue au démarrage
             MainFrame.Navigate(new Uri("Accueil.xaml", UriKind.Relative));
         }
 

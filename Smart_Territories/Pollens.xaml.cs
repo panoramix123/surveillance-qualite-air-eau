@@ -17,7 +17,7 @@ namespace Smart_Territories
             // Initialisation sécurisée du moteur Edge
             await PollenWebView.EnsureCoreWebView2Async();
 
-            // Chargement de l'URL par le code (plus d'erreur MC3000)
+            // Chargement de l'URL par le code
             PollenWebView.Source = new Uri("https://www.atmo-france.org/indiceatmo?bbox=-3.054199,46.749271,2.186279,48.427378&ind=pollen");
 
             // Une fois la navigation terminée, on "découpe" la page pour l'esthétique
