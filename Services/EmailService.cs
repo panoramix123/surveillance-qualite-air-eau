@@ -1,37 +1,39 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
-namespace Wpf_localiser
+namespace Wpf_localiser.Services
 {
     public static class EmailService
     {
-        public static bool EnvoyerAlerte(string destinataire, string sujet, string corps)
+        public static async Task<bool> EnvoyerAlerteAsync(string destinataire, string sujet, string messageCorps)
         {
             try
             {
-                SmtpClient objSmtp = new SmtpClient("smtp.gmail.com", 587)
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    Credentials = new NetworkCredential("alerte.sathebreath@gmail.com", "qqul sfxn ebaf ebpn"),
-                    EnableSsl = true
-                };
+                    client.EnableSsl = true;
+                    client.UseDefaultCredentials = false;
 
-                MailMessage objMail = new MailMessage
-                {
-                    From = new MailAddress("alerte.sathebreath@gmail.com", "SafeBreath - Alerte"),
-                    Subject = sujet,
-                    Body = corps,
-                    IsBodyHtml = true
-                };
+                    // L'adresse mail avec le point
+                    client.Credentials = new NetworkCredential("alerte.sathebreath@gmail.com", "xkpl dumy wwqh cafk");
 
-                objMail.To.Add(destinataire);
-                objSmtp.Send(objMail);
+                    using (MailMessage mail = new MailMessage())
+                    {
+                        mail.From = new MailAddress("alerte.sathebreath@gmail.com", "Supervision SafeBreath");
+                        mail.To.Add(new MailAddress(destinataire));
+                        mail.Subject = sujet;
+                        mail.Body = messageCorps;
 
-                return true;
+                        await client.SendMailAsync(mail);
+                        return true;
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Échec de l'envoi SMTP : {ex.Message}");
+                LogService.EcrireErreur($"Erreur SMTP pour {destinataire} : {ex.Message}");
                 return false;
             }
         }

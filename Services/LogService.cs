@@ -5,14 +5,14 @@ namespace Wpf_localiser.Services
 {
     public static class LogService
     {
-        private static string strPath = AppDomain.CurrentDomain.BaseDirectory + "log.txt";
+        private const string LogFile = "application_erreurs.log";
 
-        public static void subWriteLog(string strRubrique, string strMsg)
+        public static void EcrireErreur(string message)
         {
             try
             {
-                string strLine = $"{DateTime.Now:dd/MM/yyyy - HH:mm:ss} - {strRubrique.PadRight(6)} - {strMsg}";
-                File.AppendAllLines(strPath, new[] { strLine });
+                string ligne = $"[{DateTime.Now:dd/MM/yyyy HH:mm:ss}] {message}{Environment.NewLine}";
+                File.AppendAllText(LogFile, ligne);
             }
             catch { }
         }
