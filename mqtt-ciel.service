@@ -1,0 +1,16 @@
+[Unit]
+Description=Démon de collecte MQTT pour Smart Territories
+After=network.target
+
+[Service]
+Type=simple
+User=root
+# Remplace le chemin ci-dessous par le chemin exact de ton script
+ExecStart=/usr/bin/php /var/www/html/mqtt_db.php
+
+# C'EST ICI QUE LA MAGIE OPÈRE :
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
