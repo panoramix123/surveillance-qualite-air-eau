@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étude Indice de Qualité de l’Air - Tableau de bord</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="icon" type="image/x-icon" href="Assets/Images/icon.ico">
+</head>
+
+<body class="page-dashboard">
+
+  <header class="topbar">
+    <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <h1>Smart Territories</h1>
+  </header>
+
+  <div id="menu-container"></div>
+
+  <main class="main-content">
+    <section class="content-card dashboard-card">
+      <h2>Tableau de bord</h2>
+
+      <div class="dashboard-grid">
+
+        <div class="dashboard-main">
+          <div class="air-icon" id="air-icon" aria-hidden="true"></div>
+
+          <div class="quality-summary">
+            <p>Indice Qualité Air</p>
+            <strong id="qualite-air">--</strong>
+          </div>
+        </div>
+
+        <div class="dashboard-box empty-box">
+          <p>Scénarios de test</p>
+
+          <select id="scenario-select" class="scenario-select">
+            <option value="bon">Bon</option>
+            <option value="moyen">Moyen</option>
+            <option value="degrade">Dégradé</option>
+            <option value="mauvais">Mauvais</option>
+            <option value="tres-mauvais">Très mauvais</option>
+            <option value="extremement-mauvais">Extrêmement mauvais</option>
+          </select>
+
+          <label class="test-option">
+            <input type="checkbox" id="toggle-error">
+            Simuler erreur API
+          </label>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Polluant principal</p>
+          <strong id="polluant-principal">--</strong>
+          <span><span id="valeur-polluant">--</span> µg/m<sup>3</sup></span>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Température</p>
+          <strong><span id="temperature">--</span> °C</strong>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Humidité</p>
+          <strong><span id="humidite">--</span> %</strong>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="JS/menu.js?v=1"></script>
+  <script src="JS/script.js?v=6"></script>
+</body>
+</html>

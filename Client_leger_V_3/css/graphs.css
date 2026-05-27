@@ -1,0 +1,324 @@
+/* ================= GRAPHIQUES ================= */
+
+.graphs-main {
+  padding: 100px 20px 30px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.graphs-card {
+  width: 95%;
+  max-width: 1200px;
+  background: #5f5f5f;
+  border-radius: 24px;
+  padding: 28px;
+}
+
+.graphs-card h2 {
+  text-align: center;
+  font-size: 2.4rem;
+  text-decoration: underline;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.graphs-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) 320px;
+  gap: 35px;
+}
+
+.pollution-graph-box {
+  background: white;
+  color: black;
+  border-radius: 4px;
+  padding: 25px;
+  min-width: 0;
+}
+
+.pollution-graph-box h3 {
+  text-align: center;
+  font-size: 1.7rem;
+  margin-bottom: 20px;
+}
+
+/* ================= SÉLECTEUR DE SEMAINE ================= */
+
+.week-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.week-arrow {
+  width: 38px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: #2f64d6;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.week-arrow:hover {
+  background: #1f4fb3;
+  transform: scale(1.05);
+}
+
+.week-arrow:disabled {
+  background: #b5b5b5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.week-title {
+  min-width: 260px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+}
+
+/* ================= BOUTONS À GAUCHE DU GRAPHIQUE ================= */
+
+.graph-with-controls {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+}
+
+.chart-controls-box {
+  width: 130px;
+  min-width: 130px;
+  background: #ffffff;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+  color: #111;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.chart-controls-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+.chart-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.chart-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  color: #111;
+}
+
+.chart-toggle input {
+  cursor: pointer;
+  margin: 0;
+}
+
+.chart-toggle-color {
+  width: 12px;
+  height: 12px;
+  min-width: 12px;
+  min-height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+/* ================= SVG ================= */
+
+.svg-chart-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 430px;
+  overflow: hidden;
+  background: white;
+}
+
+#pollutantsSvg {
+  width: 100%;
+  height: 430px;
+  display: block;
+}
+
+/* ================= LÉGENDE ================= */
+
+.chart-legend {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.95rem;
+}
+
+.legend-color {
+  width: 18px;
+  height: 4px;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+/* ================= ERREUR DONNÉES ================= */
+
+.data-error {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
+  color: #9b0000;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 3px dashed #9b0000;
+  z-index: 5;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ================= CO2 ================= */
+
+.co2-graph-box {
+  background: white;
+  color: black;
+  border-radius: 4px;
+  padding: 25px;
+  text-align: center;
+}
+
+.co2-graph-box h3 {
+  font-size: 1.8rem;
+  letter-spacing: 3px;
+  margin-bottom: 25px;
+}
+
+.co2-info p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+}
+
+.co2-info strong {
+  font-size: 1.5rem;
+  color: #0b4c7c;
+}
+
+.co2-bar-graph {
+  margin-top: 25px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 15px;
+}
+
+.co2-max-bar {
+  position: relative;
+  width: 150px;
+  height: 330px;
+  background: #8fa4b7;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15px;
+  color: white;
+  font-size: 1.5rem;
+  overflow: hidden;
+}
+
+.co2-current-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #005b85;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15px;
+  color: white;
+  font-size: 1.4rem;
+}
+
+.co2-current-label {
+  text-align: left;
+  color: #0b4c7c;
+  margin-bottom: 45px;
+}
+
+.co2-current-label p {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.co2-current-label strong {
+  font-size: 1rem;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 950px) {
+  .graphs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .graph-with-controls {
+    flex-direction: column;
+  }
+
+  .chart-controls-box {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .chart-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .svg-chart-wrapper,
+  #pollutantsSvg {
+    height: 360px;
+  }
+
+  .graphs-card h2 {
+    font-size: 2rem;
+  }
+
+  .week-title {
+    min-width: 180px;
+    font-size: 0.9rem;
+  }
+}
