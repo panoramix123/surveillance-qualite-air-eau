@@ -31,6 +31,9 @@ function decodeUplink(input) {
 
   // Air - CO2 (2 octets, Facteur 10) - Index 25-26
   data.co2 = (bytes[25] << 8 | bytes[26]) / 10;
+  
+  // Emplacement capteur (1 octet) - Index 27
+  data.emplacement = bytes[27]; 
 
   return {
     data: data,
