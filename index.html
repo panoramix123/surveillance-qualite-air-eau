@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Étude Indice de Qualité de l’Air - Carte</title>
-  <link rel="stylesheet" href="/CSS/style.css">
-  <link rel="stylesheet" href="/CSS/map.css">
+  <title>Étude Indice de Qualité de l’Air - Tableau de bord</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="icon" type="image/x-icon" href="Assets/Images/icon.ico">
 </head>
-<body class="page-map">
+
+<body class="page-dashboard">
 
   <header class="topbar">
     <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
@@ -16,92 +19,65 @@
       <span></span>
     </button>
 
-    <h1>Étude Indice de Qualité de l’Air</h1>
+    <h1>Smart Territories</h1>
   </header>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-inner">
-      <div class="sidebar-title">Menu</div>
-
-      <nav class="menu">
-        <a href="dashboard.html" class="menu-item">Tableau de bord</a>
-
-        <div class="menu-item has-submenu">
-          <button type="button" class="menu-btn">
-            Carte
-            <span class="arrow">▶</span>
-          </button>
-
-          <div class="submenu">
-            <div class="submenu-item has-submenu">
-              <button type="button" class="menu-btn sub-btn">
-                ST Gemmes-sur-Loire
-                <span class="arrow">▶</span>
-              </button>
-
-              <div class="submenu submenu-right">
-                <button type="button" class="submenu-link active">
-                  Rue du Moulin du Pain
-                </button>
-              </div>
-            </div>
-
-            <div class="submenu-item">
-              <button type="button" class="submenu-link">Les Ponts-de-Cé</button>
-            </div>
-
-            <div class="submenu-item">
-              <button type="button" class="submenu-link">Loire-Authion</button>
-            </div>
-          </div>
-        </div>
-
-        <a href="graphs.html" class="menu-item">Graphiques</a>
-        <a href="#" class="menu-item">Informations complémentaires</a>
-        <a href="#" class="menu-item">Paramètres</a>
-        <a href="#" class="menu-item">À venir</a>
-      </nav>
-    </div>
-  </aside>
+  <div id="menu-container"></div>
 
   <main class="main-content">
-    <section class="content-card map-card">
-      <h2>Polluants atmosphériques instantanés</h2>
+    <section class="content-card dashboard-card">
+      <h2>Tableau de bord</h2>
 
-      <div class="map-layout">
-        <div class="pollutants-panel">
-          <h3>Taux de polluants instantanés :</h3>
+      <div class="dashboard-grid">
 
-          <ul>
-            <li>Particules Fines (PM2,5) = <span id="pm25-value"></span> µg/m<sup>3</sup></li>
-            <li>Micros-Particules (PM10) = <span id="pm10-value"></span> µg/m<sup>3</sup></li>
-            <li>Dioxyde d'azote (NO2) = <span id="no2-value"></span> µg/m<sup>3</sup></li>
-            <li>Ozone (O3) = <span id="o3-value"></span> µg/m<sup>3</sup></li>
-            <li>Dioxyde de soufre (SO2) = <span id="so2-value"></span> µg/m<sup>3</sup></li>
-            <li class="co2-line">Dioxyde de carbone (CO2) = <span id="co2-value"></span> mg/m<sup>3</sup></li>
-          </ul>
-        </div>
+        <div class="dashboard-main">
+          <div class="air-icon" id="air-icon" aria-hidden="true"></div>
 
-        <div class="map-panel">
-          <div class="location-badge">
-            <strong id="site-name"></strong>
-            <span id="site-coords"></span>
-          </div>
-
-          <div class="map-visual">
-            <div class="map-line"></div>
-            <div class="map-focus"></div>
-
-            <img
-              src="Assets/Maps/Carte_St_Gemmes.png"
-              alt="Carte de Saint-Gemmes-sur-Loire"
-            >
+          <div class="quality-summary">
+            <p>Indice Qualité Air</p>
+            <strong id="qualite-air">--</strong>
           </div>
         </div>
+
+        <div class="dashboard-box empty-box">
+          <p>Scénarios de test</p>
+
+          <select id="scenario-select" class="scenario-select">
+            <option value="bon">Bon</option>
+            <option value="moyen">Moyen</option>
+            <option value="degrade">Dégradé</option>
+            <option value="mauvais">Mauvais</option>
+            <option value="tres-mauvais">Très mauvais</option>
+            <option value="extremement-mauvais">Extrêmement mauvais</option>
+          </select>
+
+          <label class="test-option">
+            <input type="checkbox" id="toggle-error">
+            Simuler erreur API
+          </label>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Polluant principal</p>
+          <strong id="polluant-principal">--</strong>
+          <span><span id="valeur-polluant">--</span> µg/m<sup>3</sup></span>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Température</p>
+          <strong><span id="temperature">--</span> °C</strong>
+        </div>
+
+        <div class="dashboard-box">
+          <p>Humidité</p>
+          <strong><span id="humidite">--</span> %</strong>
+        </div>
+
       </div>
     </section>
   </main>
 
-  <script src="JS/script.js"></script>
+  <script src="JS/menu.js?v=1"></script>
+  <script src="JS/script.js?v=6"></script>
 </body>
 </html>

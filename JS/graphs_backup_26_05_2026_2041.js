@@ -5,11 +5,6 @@ const sidebar = document.getElementById("sidebar");
 const svg = document.getElementById("pollutantsSvg");
 const errorBox = document.getElementById("data-error");
 const legendBox = document.getElementById("chart-legend");
-const controlsBox = document.getElementById("chart-controls");
-
-const prevWeekBtn = document.getElementById("prevWeekBtn");
-const nextWeekBtn = document.getElementById("nextWeekBtn");
-const weekTitle = document.getElementById("week-title");
 
 if (burgerBtn && sidebar) {
   burgerBtn.addEventListener("click", () => {
@@ -41,15 +36,6 @@ const pollutants = [
   { key: "so2", label: "SO2", color: "#7d4cc2" }
 ];
 
-const visiblePollutants = {};
-
-pollutants.forEach(pollutant => {
-  visiblePollutants[pollutant.key] = true;
-});
-
-let historiqueWeeks = [];
-let currentWeekIndex = 0;
-
 function createSvgElement(tag, attributes) {
   const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
 
@@ -60,121 +46,7 @@ function createSvgElement(tag, attributes) {
   return element;
 }
 
-function normalizeHistoriqueData(data) {
-  if (isInvalidData(data)) {
-    return [];
-  }
-
-  const firstItem = data[0];
-
-  if (Array.isArray(firstItem)) {
-    return data.map((week, index) => {
-      const title = typeof week[0] === "string"
-        ? week[0]
-        : `Semaine ${index + 1}`;
-
-      const values = week.filter(item => {
-        return typeof item === "object" && item !== null && !Array.isArray(item);
-      });
-
-      return {
-        title: title,
-        values: values
-      };
-    });
-  }
-
-  return [
-    {
-      title: "Semaine actuelle",
-      values: data
-    }
-  ];
-}
-
-function getCurrentWeekValues() {
-  if (!historiqueWeeks[currentWeekIndex]) {
-    return [];
-  }
-
-  return historiqueWeeks[currentWeekIndex].values;
-}
-
-function updateWeekSelector() {
-  const currentWeek = historiqueWeeks[currentWeekIndex];
-
-  if (weekTitle && currentWeek) {
-    weekTitle.textContent = currentWeek.title;
-  }
-
-  if (prevWeekBtn) {
-    prevWeekBtn.disabled = currentWeekIndex <= 0;
-  }
-
-  if (nextWeekBtn) {
-    nextWeekBtn.disabled = currentWeekIndex >= historiqueWeeks.length - 1;
-  }
-}
-
-function refreshCurrentWeek() {
-  const weekData = getCurrentWeekValues();
-
-  if (isInvalidData(weekData)) {
-    showError();
-    return;
-  }
-
-  hideError();
-  updateWeekSelector();
-  drawPollutantsChart(weekData);
-  displayCO2(weekData);
-}
-
-function createChartControls() {
-  if (!controlsBox) {
-    return;
-  }
-
-  controlsBox.innerHTML = "";
-
-  pollutants.forEach(pollutant => {
-    const label = document.createElement("label");
-    label.className = "chart-toggle";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = visiblePollutants[pollutant.key];
-    checkbox.dataset.pollutant = pollutant.key;
-
-    checkbox.addEventListener("change", () => {
-      visiblePollutants[pollutant.key] = checkbox.checked;
-      drawPollutantsChart(getCurrentWeekValues());
-    });
-
-    const color = document.createElement("span");
-    color.className = "chart-toggle-color";
-    color.style.background = pollutant.color;
-
-    const text = document.createElement("span");
-    text.textContent = pollutant.label;
-
-    label.appendChild(checkbox);
-    label.appendChild(color);
-    label.appendChild(text);
-
-    controlsBox.appendChild(label);
-  });
-}
-
-function getVisiblePollutants() {
-  return pollutants.filter(pollutant => visiblePollutants[pollutant.key]);
-}
-
 function drawPollutantsChart(data) {
-  if (!svg) {
-    return;
-  }
-
   svg.innerHTML = "";
 
   const width = 900;
@@ -190,12 +62,10 @@ function drawPollutantsChart(data) {
   const graphWidth = width - margin.left - margin.right;
   const graphHeight = height - margin.top - margin.bottom;
 
-  const visibleList = getVisiblePollutants();
-
   const maxValue = Math.max(
     10,
     ...data.flatMap(item =>
-      visibleList.map(pollutant => Number(item[pollutant.key]) || 0)
+      pollutants.map(pollutant => Number(item[pollutant.key]) || 0)
     )
   );
 
@@ -213,6 +83,7 @@ function drawPollutantsChart(data) {
     return margin.top + graphHeight - (value / roundedMax) * graphHeight;
   }
 
+  // Fond
   svg.appendChild(createSvgElement("rect", {
     x: 0,
     y: 0,
@@ -221,6 +92,7 @@ function drawPollutantsChart(data) {
     fill: "#ffffff"
   }));
 
+  // Grille + valeurs axe Y
   const ySteps = 5;
 
   for (let i = 0; i <= ySteps; i++) {
@@ -248,6 +120,7 @@ function drawPollutantsChart(data) {
     svg.appendChild(text);
   }
 
+  // Axe X et Y
   svg.appendChild(createSvgElement("line", {
     x1: margin.left,
     y1: margin.top,
@@ -266,6 +139,7 @@ function drawPollutantsChart(data) {
     "stroke-width": 2
   }));
 
+  // Labels X
   data.forEach((item, index) => {
     const x = getX(index);
 
@@ -281,6 +155,7 @@ function drawPollutantsChart(data) {
     svg.appendChild(text);
   });
 
+  // Titre axe Y
   const yLabel = createSvgElement("text", {
     x: 18,
     y: height / 2,
@@ -293,7 +168,8 @@ function drawPollutantsChart(data) {
   yLabel.textContent = "µg/m³";
   svg.appendChild(yLabel);
 
-  visibleList.forEach(pollutant => {
+  // Courbes
+  pollutants.forEach(pollutant => {
     const points = data.map((item, index) => {
       const value = Number(item[pollutant.key]) || 0;
       return `${getX(index)},${getY(value)}`;
@@ -324,13 +200,9 @@ function drawPollutantsChart(data) {
 }
 
 function drawLegend() {
-  if (!legendBox) {
-    return;
-  }
-
   legendBox.innerHTML = "";
 
-  getVisiblePollutants().forEach(pollutant => {
+  pollutants.forEach(pollutant => {
     const item = document.createElement("div");
     item.className = "legend-item";
 
@@ -348,10 +220,6 @@ function drawLegend() {
 }
 
 function displayCO2(data) {
-  if (isInvalidData(data)) {
-    return;
-  }
-
   let max = data[0];
 
   for (let i = 1; i < data.length; i++) {
@@ -379,24 +247,6 @@ function displayCO2(data) {
   }
 }
 
-if (prevWeekBtn) {
-  prevWeekBtn.addEventListener("click", () => {
-    if (currentWeekIndex > 0) {
-      currentWeekIndex--;
-      refreshCurrentWeek();
-    }
-  });
-}
-
-if (nextWeekBtn) {
-  nextWeekBtn.addEventListener("click", () => {
-    if (currentWeekIndex < historiqueWeeks.length - 1) {
-      currentWeekIndex++;
-      refreshCurrentWeek();
-    }
-  });
-}
-
 fetch(DATA_PATH, { cache: "no-store" })
   .then(response => {
     if (!response.ok) {
@@ -406,17 +256,14 @@ fetch(DATA_PATH, { cache: "no-store" })
     return response.json();
   })
   .then(data => {
-    historiqueWeeks = normalizeHistoriqueData(data);
-
-    if (isInvalidData(historiqueWeeks)) {
+    if (isInvalidData(data)) {
       showError();
       return;
     }
 
-    currentWeekIndex = historiqueWeeks.length - 1;
-
-    createChartControls();
-    refreshCurrentWeek();
+    hideError();
+    drawPollutantsChart(data);
+    displayCO2(data);
   })
   .catch(error => {
     console.error(error);

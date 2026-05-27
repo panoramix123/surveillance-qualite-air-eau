@@ -7,7 +7,6 @@
 
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/graphs.css">
-  <link rel="icon" type="image/x-icon" href="Assets/Images/icon.ico">
 </head>
 
 <body class="page-graphs">
@@ -29,7 +28,7 @@
       <nav class="menu">
         <a href="index.html" class="menu-item">Tableau de bord</a>
 
-        <div class="menu-item has-submenu">
+	<div class="menu-item has-submenu">
           <button type="button" class="menu-btn">
             Carte
             <span class="arrow">▶</span>
@@ -55,7 +54,7 @@
               <button type="button" class="submenu-link">Loire-Authion</button>
             </div>
           </div>
-        </div>
+        </div>        
 
         <a href="graphs.html" class="menu-item">Graphiques</a>
         <a href="infos.html" class="menu-item">Informations complémentaires</a>
@@ -75,30 +74,12 @@
         <div class="pollution-graph-box">
           <h3>Historique des polluants</h3>
 
-          <div class="week-selector">
-            <button type="button" id="prevWeekBtn" class="week-arrow">◀</button>
-            <span id="week-title" class="week-title">Semaine</span>
-            <button type="button" id="nextWeekBtn" class="week-arrow">▶</button>
-          </div>
+          <div class="svg-chart-wrapper">
+            <svg id="pollutantsSvg" viewBox="0 0 900 430" preserveAspectRatio="none"></svg>
 
-          <div class="graph-with-controls">
-
-            <div class="chart-controls-box">
-              <div class="chart-controls-title">Données</div>
-
-              <div class="chart-controls" id="chart-controls">
-                <!-- Les boutons cochables sont générés automatiquement en JS -->
-              </div>
+            <div id="data-error" class="data-error hidden">
+              Erreur d’acquisition des données
             </div>
-
-            <div class="svg-chart-wrapper">
-              <svg id="pollutantsSvg" viewBox="0 0 900 430" preserveAspectRatio="none"></svg>
-
-              <div id="data-error" class="data-error hidden">
-                Erreur d’acquisition des données
-              </div>
-            </div>
-
           </div>
 
           <div id="chart-legend" class="chart-legend"></div>

@@ -1,0 +1,189 @@
+/* ================= CARTE ================= */
+
+.map-card {
+  width: 95%;
+  max-width: 1200px;
+  background: linear-gradient(180deg, #6f6f6f 0%, #5f5f5f 100%);
+  border-radius: 28px;
+  padding: 28px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.map-card h2 {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 28px;
+  color: #ffffff;
+}
+
+.map-layout {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 28px;
+  align-items: stretch;
+}
+
+/* ================= PANNEAU POLLUANTS ================= */
+
+.pollutants-panel {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 24px;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.pollutants-panel h3 {
+  font-size: 1.25rem;
+  margin-bottom: 18px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.pollutants-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pollutants-panel li {
+  font-size: 1rem;
+  line-height: 1.55;
+  margin-bottom: 12px;
+  color: #f4f4f4;
+}
+
+.pollutants-panel span {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.co2-line {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ================= PANNEAU CARTE ================= */
+
+.map-panel {
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  padding: 20px;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.location-badge {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  text-align: center;
+}
+
+.location-label {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #ffffff;
+}
+
+.location-select {
+  width: 100%;
+  max-width: 380px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #ffffff;
+  color: #222222;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 8px;
+}
+
+.location-select:focus {
+  box-shadow: 0 0 0 3px rgba(47, 100, 214, 0.35);
+}
+
+#site-coords {
+  display: block;
+  font-size: 0.9rem;
+  color: #f0f0f0;
+}
+
+/* ================= CARTE LEAFLET ================= */
+
+.map-visual {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #dcdcdc;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+#real-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 950px) {
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map-card h2 {
+    font-size: 1.8rem;
+  }
+
+  .map-visual {
+    height: 360px;
+  }
+}
+
+@media (max-width: 600px) {
+  .map-card {
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .pollutants-panel,
+  .map-panel {
+    padding: 18px;
+  }
+
+  .pollutants-panel li {
+    font-size: 0.92rem;
+  }
+
+  .map-visual {
+    height: 320px;
+  }
+
+  .location-select {
+    max-width: 100%;
+  }
+}
