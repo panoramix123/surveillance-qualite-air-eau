@@ -13,7 +13,6 @@ namespace Smart_Territories
 {
     public partial class Graphiques : Page, INotifyPropertyChanged
     {
-        // Correction du warning CS8612 sur la nullabilité
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private ChartValues<double> _valeurs = new ChartValues<double>();
@@ -72,39 +71,16 @@ namespace Smart_Territories
 
         private void AjusterAxeEtSeuils(string polluant)
         {
-            string unite = "";
-            double minV = 0;
-            Func<double, string> formatAxeY = val => val.ToString("0");
+            // On délègue la réflexion mathématique au service pur
+            var config = Services.SeuilPolluantService.ObtenirConfiguration(polluant);
 
-            switch (polluant)
-            {
-                case "Ozone O₃ (µg/m³)":
-                    LigneSeuilInfo.Value = 180; LigneSeuilAlerte.Value = 240; unite = "µg/m³"; break;
-                case "PM₁₀ (µg/m³)":
-                    LigneSeuilInfo.Value = 50; LigneSeuilAlerte.Value = 80; unite = "µg/m³"; break;
-                case "PM₂.₅ (µg/m³)":
-                    LigneSeuilInfo.Value = 25; LigneSeuilAlerte.Value = 50; unite = "µg/m³"; break;
-                case "Dioxyde de carbone CO₂ (ppm)":
-                    LigneSeuilInfo.Value = 1000; LigneSeuilAlerte.Value = 1500; unite = "ppm"; break;
-                case "Dioxyde d'azote NO₂ (µg/m³)":
-                    LigneSeuilInfo.Value = 200; LigneSeuilAlerte.Value = 400; unite = "µg/m³"; break;
-                case "Dioxyde de soufre SO₂ (µg/m³)":
-                    LigneSeuilInfo.Value = 300; LigneSeuilAlerte.Value = 500; unite = "µg/m³"; break;
-                case "Pression atmosphérique (hPa)":
-                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = "hPa"; minV = double.NaN;
-                    formatAxeY = val => val.ToString("0.0"); break;
-                case "Température (°C)":
-                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = "°C"; minV = double.NaN;
-                    formatAxeY = val => val.ToString("0.0"); break;
-                case "Taux d'humidité (%)":
-                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = "%"; break;
-                default:
-                    LigneSeuilInfo.Value = -1; LigneSeuilAlerte.Value = -1; unite = ""; break;
-            }
+            // On applique bêtement les valeurs à l'interface
+            LigneSeuilInfo.Value = config.SeuilInformation;
+            LigneSeuilAlerte.Value = config.SeuilAlerte;
 
-            AxeY.LabelFormatter = formatAxeY;
-            if (TxtUnite != null) TxtUnite.Text = unite;
-            AxeY.MinValue = minV;
+            AxeY.LabelFormatter = val => val.ToString(config.FormatAxe);
+            if (TxtUnite != null) TxtUnite.Text = config.Unite;
+            AxeY.MinValue = config.ValeurMinimum;
 
             CheckSeuils.IsEnabled = LigneSeuilInfo.Value != -1;
             if (!CheckSeuils.IsEnabled) CheckSeuils.IsChecked = false;
